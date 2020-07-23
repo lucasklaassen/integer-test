@@ -89,7 +89,6 @@ plugins:
   - serverless-secrets-plugin
   - serverless-dynamodb-local
   - serverless-offline
-  - serverless-prune-plugin
 
 package:
   include:
