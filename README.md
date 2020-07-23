@@ -21,6 +21,8 @@ Use this section to tell us about any assumptions that you made when creating yo
 If applicable. Did you do something that you feel could have been done better in a real-world application? Please
 let us know.
 
+- For the sake of time and complexity I only created 3 environments: local, test and production. Ideally I would have created a a development environment, a testing environment, a staging environment and a production environment.
+
 ### Stretch goals attempted
 
 If applicable, use this area to tell us what stretch goals you attempted. What went well? What do you wish you

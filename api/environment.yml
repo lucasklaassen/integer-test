@@ -1,0 +1,12 @@
+ENVIRONMENT: ${opt:stage, self:provider.stage}
+NODE_ENV: ${opt:stage, self:provider.stage}
+REGION: ${self:provider.region}
+AUTH0_DOMAIN: ${self:custom.secrets.AUTH0_DOMAIN}
+AUTH0_AUDIENCE: ${self:custom.secrets.AUTH0_AUDIENCE}
+AUTH0_ALGORITHM: ${self:custom.secrets.AUTH0_ALGORITHM}
+AUTH0_CLIENT_ID: ${self:custom.secrets.AUTH0_CLIENT_ID}
+AUTH0_NAMESPACE: ${self:custom.secrets.AUTH0_NAMESPACE}
+LOCAL_AWS_ACCESS_KEY_ID: ${self:custom.secrets.LOCAL_AWS_ACCESS_KEY_ID}
+LOCAL_AWS_SECRET_ACCESS_KEY: ${self:custom.secrets.LOCAL_AWS_SECRET_ACCESS_KEY}
+APP_URL: ${self:custom.secrets.APP_URL}
+tableName: ${self:custom.tableName.${opt:stage, self:provider.stage}}

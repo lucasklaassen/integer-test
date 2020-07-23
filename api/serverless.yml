@@ -1,0 +1,113 @@
+service: aws-nodejs
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-west-2
+  versionFunctions: false
+  stage: ${opt:stage, self:custom.defaultStage}
+  environment: ${file(environment.yml)}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource: '*'
+
+resources:
+  Resources:
+    GatewayResponse:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: EXPIRED_TOKEN
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+        StatusCode: '401'
+    AuthFailureGatewayResponse:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: UNAUTHORIZED
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+        StatusCode: '401'
+    IntegerUserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName.${opt:stage, self:provider.stage}}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+functions:
+  auth0Authorizer:
+    handler: src/api/handler.auth0Authorizer
+  nextInteger:
+    handler: src/api/integers/integers.next
+    events:
+      - http:
+          path: integers/next
+          method: get
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+  usersList:
+    handler: src/api/integers/integers.current
+    events:
+      - http:
+          path: integers/current
+          method: get
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+  usersUpdate:
+    handler: src/api/integers/integers.update
+    events:
+      - http:
+          path: integers/current
+          method: put
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-secrets-plugin
+  - serverless-dynamodb-local
+  - serverless-offline
+  - serverless-prune-plugin
+
+package:
+  include:
+    - src/**/!(*.spec).js
+
+custom:
+  tableName:
+    development: IntegerUser
+    local: IntegerUser
+    test: IntegerUser
+    production: IntegerUserProd
+  defaultStage: development
+  secrets: ${file(secrets.${opt:stage, self:provider.stage}.yml)}
+  dynamodb:
+    stages:
+      - local
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      convertEmptyValues: true
