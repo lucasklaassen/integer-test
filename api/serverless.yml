@@ -96,17 +96,15 @@ package:
 
 custom:
   tableName:
-    development: IntegerUser
     local: IntegerUser
     test: IntegerUser
     production: IntegerUserProd
-  defaultStage: development
+  defaultStage: local
   secrets: ${file(secrets.${opt:stage, self:provider.stage}.yml)}
   dynamodb:
     stages:
       - local
     start:
-      port: 8000
       inMemory: true
       migrate: true
       convertEmptyValues: true

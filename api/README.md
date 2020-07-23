@@ -29,9 +29,13 @@ We use eslint to lint our javascript for things like using `const` and `let` ins
 
 ---
 
+### Installing local dynamodb
+
+To install the local version of dynamodb run the following command: `./node_modules/.bin/sls dynamodb install`
+
 ### Running serverless offline
 
-To run the app: `npm start`. This will run the app locally on http://localhost:3000/
+To run the app: `npm start`. This will run the app locally on http://localhost:3000/ and dynamodb on http://localhost:8000/
 
 ## Adding environment variables
 

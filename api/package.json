@@ -5,8 +5,7 @@
   "main": "handler.js",
   "scripts": {
     "test": "sls offline start --stage test --region us-west-2 --host localhost --port 3030 --noTimeout --exec './bin/runTests.sh'",
-    "start": "sls offline start --stage local --host 0.0.0.0 --port 3000 --noTimeout",
-    "start:dynamo": "sls dynamodb start --stage local --host 0.0.0.0 --port 8000 --noTimeout",
+    "start": "sls offline start --stage local",
     "deploy:production": "sls deploy --stage production",
     "secrets:encrypt": "./bin/secrets.sh encrypt",
     "secrets:decrypt": "./bin/secrets.sh decrypt"
