@@ -14,17 +14,21 @@ export const decodeToken = (token) => {
     client.getKeys((err, key) => {
       if (err) return reject(err);
       client.getSigningKey(key[0].kid, (err, key) => {
-
         if (err) return reject(err);
         const signingKey = key.publicKey || key.rsaPublicKey;
-
-        jwt.verify(token, signingKey, {
-          algorithms: [process.env.AUTH0_ALGORITHM],
-          audience: process.env.AUTH0_AUDIENCE
-        }, (err, payload) => {
-          if (err) return reject(err);
-          return resolve(payload);
-        });
+        jwt.verify(
+          token,
+          signingKey, {
+            algorithms: [process.env.AUTH0_ALGORITHM],
+            audience: process.env.AUTH0_AUDIENCE
+          },
+          (err, payload) => {
+            if (err) return reject(err);
+            const principalId = payload ? payload.sub : 'invalidJWT';
+            payload.userId = principalId;
+            return resolve(payload);
+          }
+        );
       });
     });
   });
@@ -41,6 +45,9 @@ export const auth0Authorizer = (event) => {
       const policy = new AuthPolicy(principalId, policyResources.awsAccountId, policyResources.apiOptions);
       payload ? policy.allowAllMethods() : policy.denyAllMethods();
       const authResponse = policy.build();
+      authResponse.context = {
+        userId: principalId
+      };
       return resolve(authResponse);
     });
   });

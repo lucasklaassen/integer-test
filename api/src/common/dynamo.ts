@@ -6,7 +6,7 @@ if (process.env.ENVIRONMENT === 'local') {
     region: 'localhost',
     endpoint: 'http://localhost:8000',
     accessKeyId: process.env.LOCAL_AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.LOCAL_AWS_SECRET_ACCESS_KEY
+    secretAccessKey: process.env.LOCAL_AWS_SECRET_ACCESS_KEY,
   });
 } else {
   documentClient = new AWS.DynamoDB.DocumentClient();
@@ -17,8 +17,8 @@ export default class Dynamo {
     const params = {
       TableName,
       Key: {
-        id
-      }
+        id,
+      },
     };
     const data = await documentClient.get(params).promise();
     if (!data || !data.Item) {
@@ -31,7 +31,7 @@ export default class Dynamo {
 
   static async getAll(TableName: string, FilterExpression?: any, ExpressionAttributeValues?: any) {
     const params = {
-      TableName
+      TableName,
     };
     if (FilterExpression) {
       params['FilterExpression'] = FilterExpression;
@@ -39,7 +39,6 @@ export default class Dynamo {
     if (ExpressionAttributeValues) {
       params['ExpressionAttributeValues'] = ExpressionAttributeValues;
     }
-
     const data = await documentClient.scan(params).promise();
     if (!data || !data.Items) {
       throw Error(`There was an error scanning the data from ${TableName}`);
@@ -47,29 +46,55 @@ export default class Dynamo {
     return data.Items;
   }
 
-  static async write(data: any, TableName: string) {
-    if (!data.id) {
+  static async write(Item: any, TableName: string) {
+    if (!Item) {
       console.trace();
-      console.log('error data: ', data);
+      console.log('error data: ', Item);
       throw Error('no id on the data');
     }
     const params = {
       TableName,
-      Item: data
+      Item,
     };
     const res = await documentClient.put(params).promise();
     if (!res) {
-      throw Error(`There was an error inserting id of ${data.id} in table ${TableName}`);
+      throw Error(`There was an error inserting id of ${Item.id} in table ${TableName}`);
     }
-    return data;
+    return Item;
+  }
+
+  static async update(
+    id: string,
+    TableName: string,
+    UpdateExpression: string,
+    ExpressionAttributeValues: any,
+    ExpressionAttributeNames: any
+  ) {
+    const params = {
+      Key: {
+        id,
+      },
+      TableName,
+      UpdateExpression,
+      ExpressionAttributeNames,
+      ExpressionAttributeValues,
+      ReturnValues: 'ALL_NEW',
+    };
+
+    const res = await documentClient.update(params).promise();
+
+    if (!res) {
+      throw Error(`There was an error updating id of ${id} in table ${TableName}`);
+    }
+    return res.Attributes;
   }
 
   static async delete(id: string, TableName: string) {
     const params = {
       TableName,
       Key: {
-        id
-      }
+        id,
+      },
     };
 
     return documentClient.delete(params).promise();

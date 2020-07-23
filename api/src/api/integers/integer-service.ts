@@ -1,22 +1,41 @@
 'use strict';
 
-import { ApiEvent } from '../../interfaces/api.interface';
 import Dynamo from '../../common/dynamo';
 const tableName = String(process.env.tableName);
 
 export class IntegerService {
-  event: ApiEvent;
+  userId: string;
 
-  constructor(event: ApiEvent) {
-    this.event = event;
+  constructor(userId: string) {
+    this.userId = userId;
   }
 
-  async create() {
+  async getCurrent() {
+    return Dynamo.get(String(this.userId), tableName);
+  }
+
+  async createDefault() {
     const data: any = {
-      id: this.event.userId,
-      integer: 1,
+      id: this.userId,
+      integerValue: 1,
     };
 
     return Dynamo.write(data, tableName);
+  }
+
+  async increase() {
+    const updateExpression = 'ADD #integerValue :incrementBy';
+    const expressionAttributeValues = { ':incrementBy': 1 };
+    const expressionAttributeNames = { '#integerValue': 'integerValue' };
+
+    return Dynamo.update(this.userId, tableName, updateExpression, expressionAttributeValues, expressionAttributeNames);
+  }
+
+  async update(newIntegerValue: number) {
+    const updateExpression = 'SET #integerValue = :newValue';
+    const expressionAttributeValues = { ':newValue': newIntegerValue };
+    const expressionAttributeNames = { '#integerValue': 'integerValue' };
+
+    return Dynamo.update(this.userId, tableName, updateExpression, expressionAttributeValues, expressionAttributeNames);
   }
 }
