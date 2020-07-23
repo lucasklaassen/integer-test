@@ -1,6 +1,4 @@
 'use strict';
-// TODO: is this needed?
-export {};
 
 const middy = require('middy');
 const createError = require('http-errors');
@@ -62,7 +60,7 @@ const getCurrentHandler = middy(current)
 module.exports.current = getCurrentHandler;
 
 const update = async (event: ApiEvent) => {
-  await validateInput(event);
+  validateInput(event);
 
   const {
     userId,
@@ -96,7 +94,7 @@ const getUpdateHandler = middy(update)
 
 module.exports.update = getUpdateHandler;
 
-const validateInput = async (event: ApiEvent) => {
+const validateInput = (event: ApiEvent) => {
   if (event && event.body && event.body.data) {
     const { attributes } = event.body.data;
     if (!attributes) {
@@ -113,6 +111,10 @@ const validateInput = async (event: ApiEvent) => {
   }
 };
 
+module.exports.validateInput = validateInput;
+
 const getNumberOfDigits = (integerValue: number) => {
   return Math.ceil(Math.log10(integerValue + 1));
 };
+
+module.exports.getNumberOfDigits = getNumberOfDigits;

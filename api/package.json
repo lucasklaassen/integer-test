@@ -4,7 +4,7 @@
   "description": "A REST api for managing a stateful integer.",
   "main": "handler.js",
   "scripts": {
-    "test": "sls offline start --stage test --region us-west-2 --host localhost --port 3030 --noTimeout --exec './bin/runTests.sh'",
+    "test": "./node_modules/.bin/mocha --recursive './test/**/*.js' --require ts-node/register",
     "start": "sls offline start --stage local",
     "deploy:production": "sls deploy --stage production",
     "secrets:encrypt": "./bin/secrets.sh encrypt",

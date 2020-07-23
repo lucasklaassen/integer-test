@@ -37,6 +37,10 @@ To install the local version of dynamodb run the following command: `./node_modu
 
 To run the app: `npm start`. This will run the app locally on http://localhost:3000/ and dynamodb on http://localhost:8000/
 
+## Testing
+
+To run the test suite run the following command: `npm test`
+
 ## Adding environment variables
 
 ---

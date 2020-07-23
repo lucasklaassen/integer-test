@@ -17,8 +17,11 @@ How much time did you spend on the assignment? Normally, this is expressed in ho
 Use this section to tell us about any assumptions that you made when creating your solution.
 
 - Defaulted the starting integer to 1 since id's usually start at 1 instead of 0.
+- If you hit any of the endpoints for the first time, you will be defaulted to start at 1
+- If you hit the "next" endpoint as your first endpoint, it will return 2 as you started at 1 and then increased from it.
 - integer is a reserved word in Dynamodb so I opted to call it integerValue in the schema
 - DynamoDB only supports precision up to 38 digits so I added that validation to the update integer endpoint.
+- The error messages from the API are intentionally verbose to outline some of the design decisions.
 
 ### Shortcuts/Compromises made
 
@@ -30,6 +33,10 @@ let us know.
 - Ideally when calling the update endpoint and making a PUT request you would supply the id of the resource you're updating. Since I'm using the users Auth0 ID (which I get from the JWT) as the id to keep track of the integer for the user, it's not needed. This isn't ideal since it doesn't follow the JSONApi.org spec completely, but I think for this small example it's ok.
 
 - The next function will blow up once you reach the max integer value (for dynamo that will be when it reaches past 38 digits). Ideally in a real world app you should consider validating against this since the user could set the value to anything they want.
+
+- I did write some unit tests but I didn't write unit tests for all of the integer api endpoint public methods. I wanted to spend more time creating a front-end experience that had a login and sign up.
+
+- I didn't write any unit tests for the lib functions or common library functions. Ideally these are npm packages that are tested within themselves in the future.
 
 ### Stretch goals attempted
 
