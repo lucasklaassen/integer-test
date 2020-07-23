@@ -23,8 +23,6 @@ export const decodeToken = (token) => {
           audience: process.env.AUTH0_AUDIENCE
         }, (err, payload) => {
           if (err) return reject(err);
-          payload.teamId = payload[`${process.env.AUTH0_NAMESPACE}/team_id`];
-          payload.teamUserId = payload[`${process.env.AUTH0_NAMESPACE}/team_user_id`];
           return resolve(payload);
         });
       });
@@ -43,10 +41,6 @@ export const auth0Authorizer = (event) => {
       const policy = new AuthPolicy(principalId, policyResources.awsAccountId, policyResources.apiOptions);
       payload ? policy.allowAllMethods() : policy.denyAllMethods();
       const authResponse = policy.build();
-      authResponse.context = {
-        teamId: payload.teamId,
-        teamUserId: payload.teamUserId
-      };
       return resolve(authResponse);
     });
   });
