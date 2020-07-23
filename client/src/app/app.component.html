@@ -1,0 +1,5 @@
+<div class="wrapper mx-auto d-flex flex-row w-100">
+  <div class="w-100" *ngIf="(requiresAuth && authenticated) || !requiresAuth">
+    <router-outlet></router-outlet>
+  </div>
+</div>

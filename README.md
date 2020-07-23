@@ -38,6 +38,10 @@ let us know.
 
 - I didn't write any unit tests for the lib functions or common library functions. Ideally these are npm packages that are tested within themselves in the future.
 
+- The JWT is stored in the users browser which is not secure. Ideally I would have a httpOnly cookie that contains the JWT which gets passed to the front-end and back-end and never gets exposed to the client side.
+
+- The front-end has an environments file that contains an auth0 client id. This isn't a secret because the client side JS needs it and uses it. However, if we used the strategy I mentioned in the above comment we could omit it.
+
 ### Stretch goals attempted
 
 If applicable, use this area to tell us what stretch goals you attempted. What went well? What do you wish you
