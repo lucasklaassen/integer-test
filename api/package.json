@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha --recursive './test/**/*.js' --require ts-node/register",
     "start": "sls offline start --stage local",
-    "deploy:production": "sls deploy --stage production",
+    "deploy:production": "sls deploy --stage production --profile personal",
     "secrets:encrypt": "./bin/secrets.sh encrypt",
     "secrets:decrypt": "./bin/secrets.sh decrypt"
   },

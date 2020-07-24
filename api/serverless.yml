@@ -6,6 +6,7 @@ provider:
   region: us-west-2
   versionFunctions: false
   stage: ${opt:stage, self:custom.defaultStage}
+  profile: personal
   environment: ${file(environment.yml)}
   iamRoleStatements:
     - Effect: Allow
