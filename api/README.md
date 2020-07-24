@@ -1,5 +1,27 @@
 # integer-test API
 
+## Endpoints
+
+### Local
+
+You will need to pass an Auth0 JWT token via the Authorization header in order to use this endpoint.
+
+The front-end client (https://integer-client.lucasklaassen.com/) is doing this right now after you login.
+
+To get a JWT you can login to the front-end client and then inspect the indexdb. Find the `authResult` key and copy the accessToken within it. This can be supplied to the following endpoints to authenticate if you so choose!
+
+#### http://localhost:3000/local/integers/current GET
+
+Fetches the current integer.
+
+#### http://localhost:3000/local/integers/current PUT
+
+Updates the current integer to an integer you pass it.
+
+#### http://localhost:3000/local/integers/next GET
+
+Increases the current integer by one and returns it to you.
+
 ## Installation
 
 ---
@@ -13,7 +35,7 @@ To encrypt secrets run the following command:
 
 - `npm run secrets:encrypt 'password goes here'`
 
-Repeat for each stage (local, test, production). The password has been sent to you via email.
+The password has been sent to you via email.
 
 ## Linting
 
