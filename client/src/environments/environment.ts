@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   environment: 'local',
-  apiUrl: 'http://localhost:3000',
+  apiUrl: 'http://localhost:3000/local',
   auth: {
     clientId: 'tvO72oDN3k9QPe0X42EzayR0T1S0NVcK',
     domain: 'integer-test.us.auth0.com',

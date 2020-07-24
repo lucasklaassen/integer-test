@@ -42,6 +42,8 @@ let us know.
 
 - The front-end has an environments file that contains an auth0 client id. This isn't a secret because the client side JS needs it and uses it. However, if we used the strategy I mentioned in the above comment we could omit it.
 
+- Using a model named Integer is dangerous since it is used in a lot of programming languages. It worked for this project but if I had more time I would refactor the name Integer out of the entire project.
+
 ### Stretch goals attempted
 
 If applicable, use this area to tell us what stretch goals you attempted. What went well? What do you wish you

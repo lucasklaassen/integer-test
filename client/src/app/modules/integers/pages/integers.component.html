@@ -1,1 +1,40 @@
-<h1>Integers</h1>
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <header class="masthead">
+    <div class="inner">
+      <h3 class="masthead-brand">Integer</h3>
+      <nav class="nav nav-masthead justify-content-center">
+        <a class="nav-link active" [routerLink]="['/logout']">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <main role="main" class="inner cover">
+    <h1 *ngIf="integerObj" class="cover-heading">
+      Current Integer: {{ integerObj.integer }}.
+    </h1>
+    <h1 *ngIf="!integerObj" class="cover-heading">
+      Loading...
+    </h1>
+    <p class="lead">
+      Click the next button for the next Integer.
+    </p>
+    <p class="lead">
+      <a (click)="nextInteger()" class="btn btn-lg btn-secondary">Next</a>
+    </p>
+    <p class="lead">
+      Or you can enter in your own Integer!
+    </p>
+    <input class="form-control mb-4 w-50" type="text" placeholder="New Integer" aria-label="Enter a new Integer" />
+    <p class="lead">
+      <a href="#" class="btn btn-lg btn-secondary">Submit</a>
+    </p>
+  </main>
+
+  <footer class="mastfoot mt-auto">
+    <div class="inner">
+      <p>
+        Never trust a computer you can't throw out a window. - Steve Wozniak
+      </p>
+    </div>
+  </footer>
+</div>

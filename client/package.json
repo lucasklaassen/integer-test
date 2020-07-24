@@ -21,7 +21,9 @@
     "@angular/router": "~9.1.6",
     "@ngx-pwa/local-storage": "^10.0.1",
     "auth0-js": "^9.13.4",
+    "bootstrap": "^4.5.0",
     "class-transformer": "^0.2.3",
+    "jquery": "^3.5.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

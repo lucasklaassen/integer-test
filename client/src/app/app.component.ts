@@ -24,6 +24,7 @@ export class AppComponent {
     this.authService.isLoggedIn$.subscribe((authenticated) => {
       if (authenticated) {
         this.authenticated = authenticated;
+        this.router.navigate(['/integers']);
       }
     });
 

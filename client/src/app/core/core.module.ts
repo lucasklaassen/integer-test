@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from './authentication/components/login/login.component';
@@ -7,7 +6,7 @@ import { AuthService } from './authentication/services/auth/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  imports: [CommonModule, RouterModule, HttpClientModule],
+  imports: [RouterModule, HttpClientModule],
   declarations: [LoginComponent, LogoutComponent],
   providers: [AuthService],
 })
