@@ -56,7 +56,7 @@ Back-end: https://integer-api.lucasklaassen.com/integers
 
 - I was going to build an easier way for you to retrieve a JWT to hit the back-end endpoints from curl, but since I built out the front-end I hoped that wouldn't be high on your priority list.
 
-- I didn't include any unit tests within the Angular front-end. I spent a lot of time completing the stretch goals that I only put effort into unit testing the back-end.
+- I didn't include any unit tests within the Angular front-end. I spent a lot of time completing the stretch goals and because of that I chose to only put effort into unit testing the back-end.
 
 ### Other information about your submission that you feel it's important that we know if applicable.
 
