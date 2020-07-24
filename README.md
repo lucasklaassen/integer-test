@@ -42,7 +42,7 @@ Back-end: https://integer-api.lucasklaassen.com/integers
 - The back-end is comprised of NodeJS lambda functions, which are interfaced through API Gateway.
 - The front-end is an Angular 9 SPA which is deployed to S3 and served through AWS Cloudfront.
 - I'm using DynamoDB as the database for this as it's just a simple key value store based on the user's id.
-- Wrote some unit tests for the back-end and the front-end.
+- Wrote some unit tests for the back-end.
 
 ### Instructions to run assignment locally
 
