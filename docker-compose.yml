@@ -1,0 +1,11 @@
+version: "3"
+services:
+  deploy:
+    container_name: integer-test-deploy
+    build: deploy
+    environment:
+      AWS_CONFIG_FILE: "/root/.aws/config"
+    volumes:
+      - ~/.aws/:/root/.aws/
+      - ~/.ssh/:/root/.ssh/
+      - $PWD:/code
