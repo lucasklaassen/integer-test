@@ -43,6 +43,7 @@ Back-end: https://integer-api.lucasklaassen.com/integers
 - The front-end is an Angular 9 SPA which is deployed to S3 and served through AWS Cloudfront.
 - I'm using DynamoDB as the database for this as it's just a simple key value store based on the user's id.
 - Wrote some unit tests for the back-end.
+- I have solid front-end and back-end validaton that I'm pretty happy with.
 
 ### Instructions to run assignment locally
 
