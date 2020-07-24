@@ -39,7 +39,7 @@ describe('Integer API', () => {
             }
           }
         });
-      }).to.throw('body.data.attributes.integerValue must be a valid postive integer less than 38 digits.');
+      }).to.throw('body.data.attributes.integerValue must be a valid postive integer less than 16 digits.');
     });
 
     it('validates that the attributes payload must contain an integerValue.', async () => {
@@ -51,7 +51,7 @@ describe('Integer API', () => {
             }
           }
         });
-      }).to.throw('body.data.attributes.integerValue must be a valid postive integer less than 38 digits.');
+      }).to.throw('body.data.attributes.integerValue must be a valid postive integer less than 16 digits.');
     });
 
     it('validates that the attributes payload must contain valid integerValue.', async () => {
@@ -65,7 +65,7 @@ describe('Integer API', () => {
             }
           }
         });
-      }).to.throw('body.data.attributes.integerValue must be a valid postive integer less than 38 digits.');
+      }).to.throw('body.data.attributes.integerValue must be a valid postive integer less than 16 digits.');
     });
 
     it('validates that the attributes payload must contain positive integerValue.', async () => {
@@ -79,7 +79,7 @@ describe('Integer API', () => {
             }
           }
         });
-      }).to.throw('body.data.attributes.integerValue must be a valid postive integer less than 38 digits.');
+      }).to.throw('body.data.attributes.integerValue must be a valid postive integer less than 16 digits.');
     });
 
     it('validates that the attributes payload contains a valid integerValue.', async () => {
@@ -93,7 +93,7 @@ describe('Integer API', () => {
             }
           }
         });
-      }).to.not.throw('body.data.attributes.integerValue must be a valid postive integer less than 38 digits.');
+      }).to.not.throw('body.data.attributes.integerValue must be a valid postive integer less than 16 digits.');
     });
   });
 

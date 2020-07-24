@@ -33,13 +33,13 @@ export class IntegerService {
   public updateInteger(newInteger: Integer): Observable<Integer> {
     const integerToSend = classToPlain(newInteger);
     return this.http
-      .put<IApiResponse<Integer>>(`${this.api}/integers/current`, integerToSend)
+      .put<IApiResponse<Integer>>(`${this.api}/integers/current`, {
+        data: { attributes: { ...integerToSend } },
+      })
       .pipe(
         map((result) => plainToClass(Integer, result.data as Integer)),
         catchError((error) => {
-          return of(
-            plainToClass(Integer, { errors: [error.error.errorMessage] })
-          );
+          return of(plainToClass(Integer, { errors: error.error.errors }));
         })
       );
   }

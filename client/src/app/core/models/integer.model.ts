@@ -2,7 +2,7 @@ import { Base } from './base.model';
 
 export class Integer extends Base {
   id: number;
-  integer: number;
+  integerValue: number;
 
   constructor(args: Integer) {
     super();

@@ -20,7 +20,7 @@ Use this section to tell us about any assumptions that you made when creating yo
 - If you hit any of the endpoints for the first time, you will be defaulted to start at 1
 - If you hit the "next" endpoint as your first endpoint, it will return 2 as you started at 1 and then increased from it.
 - integer is a reserved word in Dynamodb so I opted to call it integerValue in the schema
-- DynamoDB only supports precision up to 38 digits so I added that validation to the update integer endpoint.
+- DynamoDB only supports precision up to 38 digits but javascript has problems with integers over 15 digits so I added that validation to the update integer endpoint.
 - The error messages from the API are intentionally verbose to outline some of the design decisions.
 
 ### Shortcuts/Compromises made

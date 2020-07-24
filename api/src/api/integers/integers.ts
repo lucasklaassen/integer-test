@@ -16,7 +16,7 @@ const next = async (event: ApiEvent) => {
     statusCode: 200,
     body: JSON.stringify({
       data: {
-        integer: integerObj.integerValue,
+        integerValue: integerObj.integerValue,
       },
     }),
   };
@@ -42,7 +42,7 @@ const current = async (event: ApiEvent) => {
     statusCode: 200,
     body: JSON.stringify({
       data: {
-        integer: integerObj.integerValue,
+        integerValue: integerObj.integerValue,
       },
     }),
   };
@@ -77,7 +77,7 @@ const update = async (event: ApiEvent) => {
     statusCode: 200,
     body: JSON.stringify({
       data: {
-        integer: integerObj.integerValue,
+        integerValue: integerObj.integerValue,
       },
     }),
   };
@@ -101,9 +101,9 @@ const validateInput = (event: ApiEvent) => {
       throw new createError.BadRequest('body.data.attributes must exist.');
     }
     const integerValue = attributes.integerValue;
-    if (!integerValue || isNaN(Number(integerValue)) || integerValue <= 0 || getNumberOfDigits(integerValue) >= 38) {
+    if (!integerValue || isNaN(Number(integerValue)) || integerValue <= 0 || getNumberOfDigits(integerValue) >= 16) {
       throw new createError.BadRequest(
-        'body.data.attributes.integerValue must be a valid postive integer less than 38 digits.'
+        'body.data.attributes.integerValue must be a valid postive integer less than 16 digits.'
       );
     }
   } else {
