@@ -64,6 +64,8 @@ Back-end: https://integer-api.lucasklaassen.com/integers
 
 - To deploy this project I'm using a docker container which has the AWS CLI installed within it. I'm mounting a few volumes into the container so it has access to the code and my AWS Creds. I've used this approach in previous projects and it's always worked well.
 
+- Since the back-end is using lambda functions you may experience some slowness when using the API on the first few hits due to cold starts.
+
 ### Your feedback on this technical challenge
 
 - This is definitely one of the more fun challenges I've taken on so far. It allows you to be quite creative and have total control over a full stack solution.
