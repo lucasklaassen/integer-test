@@ -1,6 +1,7 @@
 ENVIRONMENT: ${opt:stage, self:provider.stage}
 NODE_ENV: ${opt:stage, self:provider.stage}
 REGION: ${self:provider.region}
+API_KEY: ${self:custom.secrets.API_KEY}
 AUTH0_DOMAIN: ${self:custom.secrets.AUTH0_DOMAIN}
 AUTH0_AUDIENCE: ${self:custom.secrets.AUTH0_AUDIENCE}
 AUTH0_ALGORITHM: ${self:custom.secrets.AUTH0_ALGORITHM}
@@ -10,3 +11,5 @@ LOCAL_AWS_ACCESS_KEY_ID: ${self:custom.secrets.LOCAL_AWS_ACCESS_KEY_ID}
 LOCAL_AWS_SECRET_ACCESS_KEY: ${self:custom.secrets.LOCAL_AWS_SECRET_ACCESS_KEY}
 APP_URL: ${self:custom.secrets.APP_URL}
 tableName: ${self:custom.tableName.${opt:stage, self:provider.stage}}
+scheduledEventsTableName: ${self:custom.scheduledEventsTableName.${opt:stage, self:provider.stage}}
+userPicksTableName: ${self:custom.userPicksTableName.${opt:stage, self:provider.stage}}

@@ -47,10 +47,75 @@ resources:
           - AttributeName: id
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-
+    ScheduledEventsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.scheduledEventsTableName.${opt:stage, self:provider.stage}}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: N
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    UserPicksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.userPicksTableName.${opt:stage, self:provider.stage}}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
 functions:
   auth0Authorizer:
     handler: src/api/handler.auth0Authorizer
+  scheduleEventsList:
+    handler: src/api/scheduled-events/scheduled-events.getAll
+    events:
+      - http:
+          path: scheduled-events
+          method: get
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+  fetchNewApiData:
+    handler: src/api/fetcher/fetcher.fetchNewApiData
+    events:
+      - http:
+          path: fetcher
+          method: get
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+  fetchUserPicks:
+    handler: src/api/user-picks/user-picks.fetch
+    events:
+      - http:
+          path: user-picks
+          method: get
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+  savePicks:
+    handler: src/api/user-picks/user-picks.savePicks
+    events:
+      - http:
+          path: user-picks
+          method: post
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
   nextInteger:
     handler: src/api/integers/integers.next
     events:
@@ -100,6 +165,14 @@ custom:
     local: IntegerUser
     test: IntegerUser
     production: IntegerUserProd
+  scheduledEventsTableName:
+    local: ScheduledEvents
+    test: ScheduledEvents
+    production: ScheduledEventsProd
+  userPicksTableName:
+    local: UserPicks
+    test: UserPicks
+    production: UserPicksProd
   defaultStage: local
   secrets: ${file(secrets.${opt:stage, self:provider.stage}.yml)}
   dynamodb:

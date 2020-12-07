@@ -1,0 +1,26 @@
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <header class="masthead">
+    <div class="inner">
+      <div class="d-flex justify-content-between flex-row">
+        <h3 class="masthead-brand">Scheduled Events</h3>
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link active" [routerLink]="['/logout']">Logout</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main role="main" class="inner cover">
+    <div class="card">
+      <ul class="list-group list-group-flush">
+        <li
+          *ngFor="let event of events"
+          (click)="goToEvent(event.id)"
+          class="list-group-item clickable"
+        >
+          {{ event.name }}
+        </li>
+      </ul>
+    </div>
+  </main>
+</div>

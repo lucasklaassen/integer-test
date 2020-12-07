@@ -7,7 +7,7 @@ import { AuthGuard } from './core/guards/auth.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'integers',
+    redirectTo: 'scheduled-events',
     pathMatch: 'full',
   },
   {
@@ -29,11 +29,18 @@ const routes: Routes = [
             (m) => m.IntegersModule
           ),
       },
+      {
+        path: 'scheduled-events',
+        loadChildren: () =>
+          import('./modules/scheduled-events/scheduled-events.module').then(
+            (m) => m.ScheduledEventsModule
+          ),
+      },
     ],
   },
   {
     path: '**',
-    redirectTo: 'integers',
+    redirectTo: 'scheduled-events',
     pathMatch: 'full',
   },
 ];
