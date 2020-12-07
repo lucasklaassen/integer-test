@@ -105,7 +105,6 @@ export class AuthService {
   }
 
   public logout(): void {
-    console.log('hithithit');
     // Remove tokens and expiry time
     this._accessToken = '';
     this._idToken = '';

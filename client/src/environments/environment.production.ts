@@ -7,8 +7,8 @@ export const environment = {
     domain: 'integer-test.us.auth0.com',
     audience: 'https://integer-api.lucasklaassen.com',
     namespace: 'https://lucasklaassen.com',
-    redirect: 'https://integer-client.lucasklaassen.com/callback',
-    mainUrl: 'https://integer-client.lucasklaassen.com',
+    redirect: 'https://fights.lucasklaassen.com/callback',
+    mainUrl: 'https://fights.lucasklaassen.com',
     scope: 'openid profile',
   },
 };
