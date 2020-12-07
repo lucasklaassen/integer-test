@@ -18,6 +18,7 @@ export class FightsComponent implements OnInit, OnDestroy {
   public fights: Fight[];
   public userHasMadePicks: boolean = false;
   public userPicks: any = {};
+  public submitText = 'Submit';
 
   private destroy$: Subject<any> = new Subject();
 
@@ -67,6 +68,7 @@ export class FightsComponent implements OnInit, OnDestroy {
     if (this.userHasMadePicks) {
       return;
     }
+    this.submitText = 'Submitting...';
     let picksForApi = [];
     Object.keys(this.userPicks).forEach((key) => {
       let pick = {};
@@ -80,6 +82,7 @@ export class FightsComponent implements OnInit, OnDestroy {
       .subscribe((results) => {
         this.userHasMadePicks = true;
         window.scrollTo(0, 0);
+        this.submitText = 'Submit';
       });
   }
 
