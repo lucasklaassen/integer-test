@@ -86,14 +86,7 @@ functions:
   fetchNewApiData:
     handler: src/api/fetcher/fetcher.fetchNewApiData
     events:
-      - http:
-          path: fetcher
-          method: get
-          cors: true
-          authorizer:
-            name: auth0Authorizer
-            resultTtlInSeconds: 0
-            identitySource: method.request.header.Authorization
+      - schedule: rate(10 minutes)
   fetchUserPicks:
     handler: src/api/user-picks/user-picks.fetch
     events:
