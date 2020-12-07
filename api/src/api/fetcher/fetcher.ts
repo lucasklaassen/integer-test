@@ -5,8 +5,7 @@ const tableName = String(process.env.scheduledEventsTableName);
 const middy = require('middy');
 const got = require('got');
 const { jsonBodyParser, httpHeaderNormalizer, doNotWaitForEmptyEventLoop } = require('middy/middlewares');
-import { httpJsonApiErrorHandler, cors, userInfoToEvent } from '../../lib/middlewares';
-import { ApiEvent } from '../../interfaces/api.interface';
+import { httpJsonApiErrorHandler, cors } from '../../lib/middlewares';
 import { ScheduledEvent } from '../../interfaces/scheduled-event.interface';
 import { ScheduledEventsService } from '../scheduled-events/scheduled-events-service';
 import { Fight } from '../../interfaces/fight.interface';
@@ -39,7 +38,7 @@ const fetchNewApiData = async () => {
 
         currentEvent.fights = allFights;
 
-        Dynamo.write(currentEvent, tableName);
+        await Dynamo.write(currentEvent, tableName);
       } catch (error) {
         console.log(error);
       }
