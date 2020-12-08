@@ -13,3 +13,4 @@ APP_URL: ${self:custom.secrets.APP_URL}
 tableName: ${self:custom.tableName.${opt:stage, self:provider.stage}}
 scheduledEventsTableName: ${self:custom.scheduledEventsTableName.${opt:stage, self:provider.stage}}
 userPicksTableName: ${self:custom.userPicksTableName.${opt:stage, self:provider.stage}}
+leaderboardTableName: ${self:custom.leaderboardTableName.${opt:stage, self:provider.stage}}

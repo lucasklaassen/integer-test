@@ -1,0 +1,54 @@
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <header class="masthead">
+    <div class="inner">
+      <div class="d-flex justify-content-between align-items-center flex-row">
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link active" [routerLink]="['/scheduled-events']"
+            >Back</a
+          >
+        </nav>
+        <h3 class="masthead-brand">Leaderboard</h3>
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link active" [routerLink]="['/logout']">Logout</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main role="main" class="inner cover">
+    <form
+      *ngIf="!userHasName"
+      [formGroup]="leaderboardForm"
+      [ngClass]="{
+        'needs-validation': !formSubmitted,
+        'was-validated': formSubmitted
+      }"
+    >
+      <p style="color: #fff">Looks like we don't have a name for you yet...</p>
+      <input
+        class="form-control w-50"
+        type="text"
+        placeholder="Full name"
+        aria-label="Enter your name"
+        formControlName="name"
+        required
+      />
+      <div
+        *ngIf="formSubmitted && leaderboardForm.get('name').invalid"
+        class="invalid-feedback"
+      >
+        You need to enter your full name.
+      </div>
+      <p class="lead mt-4">
+        <a (click)="submitForm()" class="btn btn-lg btn-secondary">Submit</a>
+      </p>
+    </form>
+    <div *ngIf="leaderboards" class="card">
+      <ul class="list-group list-group-flush">
+        <li *ngFor="let leaderboard of leaderboards" class="list-group-item">
+          {{ leaderboard.name }}
+        </li>
+      </ul>
+    </div>
+  </main>
+</div>

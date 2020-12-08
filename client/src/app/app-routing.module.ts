@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './core/authentication/components/login/login.component';
 import { LogoutComponent } from './core/authentication/components/logout/logout.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { LeaderboardComponent } from './modules/components/leaderboard/leaderboard.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'logout',
     component: LogoutComponent,
+  },
+  {
+    path: 'leaderboard',
+    component: LeaderboardComponent,
   },
   {
     path: '',

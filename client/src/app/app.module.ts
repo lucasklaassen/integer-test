@@ -7,9 +7,10 @@ import { CoreModule } from './core/core.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptorService } from './core/interceptors/token-interceptor.service';
 import { CommonModule } from '@angular/common';
+import { LeaderboardComponent } from './modules/components/leaderboard/leaderboard.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, LeaderboardComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

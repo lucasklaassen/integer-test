@@ -69,6 +69,17 @@ resources:
           - AttributeName: id
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+    LeaderboardTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.leaderboardTableName.${opt:stage, self:provider.stage}}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
 functions:
   auth0Authorizer:
     handler: src/api/handler.auth0Authorizer
@@ -86,7 +97,11 @@ functions:
   fetchNewApiData:
     handler: src/api/fetcher/fetcher.fetchNewApiData
     events:
-      - schedule: rate(10 minutes)
+      - schedule: rate(1 hour)
+      - http:
+          path: fetcher
+          method: get
+          cors: true
   fetchUserPicks:
     handler: src/api/user-picks/user-picks.fetch
     events:
@@ -104,6 +119,39 @@ functions:
       - http:
           path: user-picks
           method: post
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+  fetchLeaderboard:
+    handler: src/api/leaderboard/leaderboard.fetch
+    events:
+      - http:
+          path: leaderboard
+          method: get
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+  saveLeaderboard:
+    handler: src/api/leaderboard/leaderboard.saveLeaderboard
+    events:
+      - http:
+          path: leaderboard
+          method: post
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+  leaderboardList:
+    handler: src/api/leaderboard/leaderboard.getAll
+    events:
+      - http:
+          path: leaderboards
+          method: get
           cors: true
           authorizer:
             name: auth0Authorizer
@@ -166,6 +214,10 @@ custom:
     local: UserPicks
     test: UserPicks
     production: UserPicksProd
+  leaderboardTableName:
+    local: Leaderboard
+    test: Leaderboard
+    production: LeaderboardProd
   defaultStage: local
   secrets: ${file(secrets.${opt:stage, self:provider.stage}.yml)}
   dynamodb:
