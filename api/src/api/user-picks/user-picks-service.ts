@@ -12,18 +12,8 @@ export class UserPicksService {
     this.eventId = eventId;
   }
 
-  static mapKeys(apiObject: any) {
-    return {
-      id: apiObject.EventId,
-      leagueId: apiObject.LeagueId,
-      name: apiObject.Name,
-      shortName: apiObject.ShortName,
-      season: apiObject.Season,
-      day: apiObject.Day,
-      dateTime: apiObject.DateTime,
-      status: apiObject.Status,
-      active: apiObject.Active,
-    };
+  static async scan() {
+    return Dynamo.getAll(tableName);
   }
 
   async fetch() {

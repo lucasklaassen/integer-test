@@ -45,8 +45,20 @@
     </form>
     <div *ngIf="leaderboards" class="card">
       <ul class="list-group list-group-flush">
-        <li *ngFor="let leaderboard of leaderboards" class="list-group-item">
-          {{ leaderboard.name }}
+        <li
+          *ngFor="let leaderboard of leaderboards; let i = index"
+          class="list-group-item"
+        >
+          <div
+            class="d-flex flex-row align-items-center justify-content-between"
+          >
+            <span>{{ leaderboard.name }}: {{ leaderboard.totalPoints }}</span>
+            <span
+              *ngIf="i === 0 && +leaderboard.totalPoints > 0"
+              class="badge badge-success"
+              >Top Dawg</span
+            >
+          </div>
         </li>
       </ul>
     </div>

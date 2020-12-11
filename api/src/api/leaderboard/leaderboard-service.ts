@@ -41,4 +41,28 @@ export class LeaderboardService {
       return Dynamo.write(data, tableName);
     }
   }
+
+  async increase() {
+    try {
+      await Dynamo.get(this.userId, tableName);
+      const updateExpression = 'ADD #integerValue :incrementBy';
+      const expressionAttributeValues = { ':incrementBy': 1 };
+      const expressionAttributeNames = { '#integerValue': 'totalPoints' };
+
+      return Dynamo.update(
+        this.userId,
+        tableName,
+        updateExpression,
+        expressionAttributeValues,
+        expressionAttributeNames
+      );
+    } catch (error) {
+      const data: any = {
+        id: this.userId,
+        totalPoints: 1,
+      };
+
+      return Dynamo.write(data, tableName);
+    }
+  }
 }

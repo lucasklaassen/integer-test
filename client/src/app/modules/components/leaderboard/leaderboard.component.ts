@@ -3,9 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LeaderboardService } from 'src/app/core/http/integer/leaderboard.service';
-import { Fight } from 'src/app/core/models/fight.model';
 import { Leaderboard } from 'src/app/core/models/leaderboard.model';
-import { ScheduledEvent } from 'src/app/core/models/scheduled-event.model';
 
 @Component({
   selector: 'app-leaderboard',
@@ -52,6 +50,7 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
       .getAll()
       .pipe(takeUntil(this.destroy$))
       .subscribe((results) => {
+        results = results.sort((a, b) => b.totalPoints - a.totalPoints);
         this.leaderboards = results;
       });
   }

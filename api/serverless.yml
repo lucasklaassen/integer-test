@@ -97,9 +97,17 @@ functions:
   fetchNewApiData:
     handler: src/api/fetcher/fetcher.fetchNewApiData
     events:
-      - schedule: rate(1 hour)
+      - schedule: rate(10 minutes)
       - http:
           path: fetcher
+          method: get
+          cors: true
+  winChecker:
+    handler: src/api/win-checker/win-checker.winChecker
+    events:
+      - schedule: rate(5 minutes)
+      - http:
+          path: win-checker
           method: get
           cors: true
   fetchUserPicks:

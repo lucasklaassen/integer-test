@@ -13,7 +13,7 @@ if (process.env.ENVIRONMENT === 'local') {
 }
 
 export default class Dynamo {
-  static async get(id: string, TableName: string) {
+  static async get(id: string | number, TableName: string) {
     const params = {
       TableName,
       Key: {

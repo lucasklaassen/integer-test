@@ -9,7 +9,7 @@ import { ScheduledEventsService } from './scheduled-events-service';
 
 const getAll = async (event: ApiEvent) => {
   const userId = event.userId;
-  const eventService = new ScheduledEventsService(userId);
+  const eventService = new ScheduledEventsService(userId, '');
   const events: ScheduledEvent[] = await eventService.getAll();
 
   return {
@@ -32,7 +32,7 @@ module.exports.getAll = getAllHandler;
 
 const fetchApiData = async (event: ApiEvent) => {
   const userId = event.userId;
-  const eventService = new ScheduledEventsService(userId);
+  const eventService = new ScheduledEventsService(userId, '');
   const events: ScheduledEvent[] = await eventService.getAll();
 
   return {
