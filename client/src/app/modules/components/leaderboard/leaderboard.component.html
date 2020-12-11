@@ -52,7 +52,9 @@
           <div
             class="d-flex flex-row align-items-center justify-content-between"
           >
-            <span>{{ leaderboard.name }}: {{ leaderboard.totalPoints }}</span>
+            <span
+              >{{ leaderboard.name }}: {{ leaderboard.totalPoints || 0 }}</span
+            >
             <span
               *ngIf="i === 0 && +leaderboard.totalPoints > 0"
               class="badge badge-success"
