@@ -48,6 +48,22 @@ const winChecker = async () => {
       currentPick.correct = false;
       if (+currentFight.winnerId === +currentPick.fighterId) {
         await leaderboardService.increase();
+        let oddsDifference = -Infinity;
+        let underdogId;
+        currentFight.fighters.forEach((fighter) => {
+          const moneyline = +fighter.moneyline;
+          if (fighter.moneyline > oddsDifference) {
+            underdogId = fighter.id;
+          }
+          if (oddsDifference === -Infinity) {
+            oddsDifference = Math.abs(moneyline);
+          } else {
+            oddsDifference += Math.abs(moneyline);
+          }
+        });
+        if (oddsDifference >= 500 && +currentPick.fighterId === underdogId) {
+          await leaderboardService.increase();
+        }
         currentPick.correct = true;
       }
       currentPick.completed = true;

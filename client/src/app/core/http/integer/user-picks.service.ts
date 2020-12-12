@@ -18,7 +18,9 @@ export class UserPicksService {
   public fetch(eventId: number, userId: string): Observable<any> {
     return this.http
       .get<IApiResponse<any>>(
-        `${this.api}/user-picks?eventId=${eventId}&userId=${userId}`
+        `${this.api}/user-picks?eventId=${eventId}&userId=${encodeURIComponent(
+          userId
+        )}`
       )
       .pipe(
         map((result) => result.data),
