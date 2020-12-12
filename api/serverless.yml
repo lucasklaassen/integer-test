@@ -178,6 +178,17 @@ functions:
             name: auth0Authorizer
             resultTtlInSeconds: 0
             identitySource: method.request.header.Authorization
+  hallOfFameList:
+    handler: src/api/hall-of-fame/hall-of-fame.getAll
+    events:
+      - http:
+          path: hall-of-fame
+          method: get
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
   nextInteger:
     handler: src/api/integers/integers.next
     events:

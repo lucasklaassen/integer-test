@@ -6,7 +6,7 @@ import Dynamo from '../../common/dynamo';
 import { Fight } from '../../interfaces/fight.interface';
 import { ScheduledEvent } from '../../interfaces/scheduled-event.interface';
 import { httpJsonApiErrorHandler, cors } from '../../lib/middlewares';
-import { HallOfFameService } from '../hallOfFame/hall-of-fame-service';
+import { HallOfFameService } from '../hall-of-fame/hall-of-fame-service';
 import { LeaderboardService } from '../leaderboard/leaderboard-service';
 import { ScheduledEventsService } from '../scheduled-events/scheduled-events-service';
 import { UserPicksService } from '../user-picks/user-picks-service';
@@ -91,7 +91,8 @@ const winChecker = async () => {
 
       for (let j = 0; j < leaderboards.length; j += 1) {
         const leaderboard = leaderboards[j];
-        await hallOfFameService.saveHallOfFame(leaderboard.id, leaderboard.name);
+        const name = leaderboard.name || 'Unknown';
+        await hallOfFameService.saveHallOfFame(leaderboard.id, name);
         if (leaderboard.totalPoints >= max && leaderboard.totalPoints > 0) {
           if (leaderboard.totalPoints > max) {
             winners = [];
@@ -105,7 +106,7 @@ const winChecker = async () => {
 
       for (let j = 0; j < winners.length; j += 1) {
         const winner = winners[j];
-        await hallOfFameService.increase(winner.id, winner.name);
+        await hallOfFameService.increase(winner.id, winner.name || 'Unknown');
       }
 
       currentEvent.hallOfFameCounted = true;

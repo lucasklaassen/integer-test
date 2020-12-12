@@ -8,9 +8,10 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptorService } from './core/interceptors/token-interceptor.service';
 import { CommonModule } from '@angular/common';
 import { LeaderboardComponent } from './modules/components/leaderboard/leaderboard.component';
+import { HallOfFameComponent } from './modules/components/hall-of-fame/hall-of-fame.component';
 
 @NgModule({
-  declarations: [AppComponent, LeaderboardComponent],
+  declarations: [AppComponent, LeaderboardComponent, HallOfFameComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
