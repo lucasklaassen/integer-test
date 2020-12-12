@@ -26,7 +26,7 @@ export class ScheduledEventsService {
     };
   }
 
-  async getAll() {
+  static async getAll() {
     return Dynamo.getAll(tableName);
   }
 

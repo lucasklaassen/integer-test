@@ -14,3 +14,4 @@ tableName: ${self:custom.tableName.${opt:stage, self:provider.stage}}
 scheduledEventsTableName: ${self:custom.scheduledEventsTableName.${opt:stage, self:provider.stage}}
 userPicksTableName: ${self:custom.userPicksTableName.${opt:stage, self:provider.stage}}
 leaderboardTableName: ${self:custom.leaderboardTableName.${opt:stage, self:provider.stage}}
+hallOfFameTableName: ${self:custom.hallOfFameTableName.${opt:stage, self:provider.stage}}

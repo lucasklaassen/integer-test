@@ -80,6 +80,17 @@ resources:
           - AttributeName: id
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+    HallOfFameTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.hallOfFameTableName.${opt:stage, self:provider.stage}}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
 functions:
   auth0Authorizer:
     handler: src/api/handler.auth0Authorizer
@@ -96,6 +107,7 @@ functions:
             identitySource: method.request.header.Authorization
   fetchNewApiData:
     handler: src/api/fetcher/fetcher.fetchNewApiData
+    timeout: 300
     events:
       - schedule: rate(10 minutes)
       - http:
@@ -104,6 +116,7 @@ functions:
           cors: true
   winChecker:
     handler: src/api/win-checker/win-checker.winChecker
+    timeout: 300
     events:
       - schedule: rate(5 minutes)
       - http:
@@ -226,6 +239,10 @@ custom:
     local: Leaderboard
     test: Leaderboard
     production: LeaderboardProd
+  hallOfFameTableName:
+    local: HallOfFame
+    test: HallOfFame
+    production: HallOfFameProd
   defaultStage: local
   secrets: ${file(secrets.${opt:stage, self:provider.stage}.yml)}
   dynamodb:

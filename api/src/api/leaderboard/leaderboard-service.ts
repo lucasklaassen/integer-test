@@ -42,6 +42,30 @@ export class LeaderboardService {
     }
   }
 
+  async reset() {
+    try {
+      await Dynamo.get(this.userId, tableName);
+      const updateExpression = 'SET #totalPoints = :newValue';
+      const expressionAttributeValues = { ':newValue': 0 };
+      const expressionAttributeNames = { '#totalPoints': 'totalPoints' };
+
+      return Dynamo.update(
+        this.userId,
+        tableName,
+        updateExpression,
+        expressionAttributeValues,
+        expressionAttributeNames
+      );
+    } catch (error) {
+      const data: any = {
+        id: this.userId,
+        totalPoints: 0,
+      };
+
+      return Dynamo.write(data, tableName);
+    }
+  }
+
   async increase() {
     try {
       await Dynamo.get(this.userId, tableName);

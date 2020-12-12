@@ -1,4 +1,4 @@
-import { Fight } from "./fight.interface";
+import { Fight } from './fight.interface';
 
 export interface ScheduledEvent {
   id: number;
@@ -10,5 +10,6 @@ export interface ScheduledEvent {
   dateTime: string;
   status: string;
   active: boolean;
+  hallOfFameCounted: boolean;
   fights: Fight[];
 }
