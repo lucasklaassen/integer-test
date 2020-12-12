@@ -27,10 +27,21 @@
     </h6>
     <button
       (click)="toggleImages()"
+      *ngIf="!userHasMadePicks"
       type="button"
       class="btn btn-info w-100 mt-2"
     >
-      Toggle Images
+      <span *ngIf="!viewImages">Show Image Viewer</span>
+      <span *ngIf="viewImages">Hide Image Viewer</span>
+    </button>
+    <button
+      (click)="toggleFriendPicks()"
+      *ngIf="userHasMadePicks && friendPicks && friendPicks.length"
+      type="button"
+      class="btn btn-info w-100 mt-2"
+    >
+      <span *ngIf="!showFriendPicks">Show Me My Friends Picks</span>
+      <span *ngIf="showFriendPicks">Hide Friend Picks</span>
     </button>
     <iframe
       *ngIf="viewImages"
@@ -38,35 +49,86 @@
       style="border: none"
       src="https://www.google.com/search?igu=1&ei=&q=ufc"
     ></iframe>
-    <div *ngFor="let fight of fights; let i = index" class="row">
-      <div class="d-flex flex-row w-100 fight my-2">
-        <div
-          *ngFor="let fighter of fight.fighters; let i = index"
-          (click)="pickFighter(fight.id, fighter.id)"
-          [ngClass]="{
-            'border-right': i % 2 === 0,
-            picked: checkIfPicked(fight.id, fighter.id)
-          }"
-          class="col-sm-6 py-4 px-3 fighter"
-        >
-          <p class="fighter-name m-0">
-            {{ fighter.firstName }} {{ fighter.lastName }}
-          </p>
-          <p class="fighter-record m-0">
-            {{ fighter.preFightWins }} - {{ fighter.preFightLosses }} -
-            {{ fighter.preFightDraws }}
-          </p>
-          <p class="fighter-record m-0">
-            <span *ngIf="favourite(fight.fighters, i)"
-              >Favourite: {{ fighter.moneyline }}</span
-            >
-            <span *ngIf="!favourite(fight.fighters, i)"
-              >Underdog: {{ fighter.moneyline }}</span
-            >
-          </p>
+    <ng-container *ngIf="!showFriendPicks">
+      <div *ngFor="let fight of fights; let i = index" class="row">
+        <div class="d-flex flex-row w-100 fight my-2">
+          <div
+            *ngFor="let fighter of fight.fighters; let i = index"
+            (click)="pickFighter(fight.id, fighter.id)"
+            [ngClass]="{
+              'border-right': i % 2 === 0,
+              picked: checkIfPicked(fight.id, fighter.id, userPicks)
+            }"
+            class="col-sm-6 py-4 px-3 fighter"
+          >
+            <p class="fighter-name m-0">
+              {{ fighter.firstName }} {{ fighter.lastName }}
+            </p>
+            <p class="fighter-record m-0">
+              {{ fighter.preFightWins }} - {{ fighter.preFightLosses }} -
+              {{ fighter.preFightDraws }}
+            </p>
+            <p class="fighter-record m-0">
+              <span *ngIf="favourite(fight.fighters, i)"
+                >Favourite: {{ fighter.moneyline }}</span
+              >
+              <span *ngIf="!favourite(fight.fighters, i)"
+                >Underdog: {{ fighter.moneyline }}</span
+              >
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </ng-container>
+
+    <ng-container *ngIf="showFriendPicks">
+      <ng-container *ngFor="let friendPick of friendPicks">
+        <h3 class="text-center mt-2" style="color: #fff">
+          {{ friendPick.name }} Picked
+        </h3>
+        <div *ngFor="let fight of fights; let i = index" class="row">
+          <div class="d-flex flex-row w-100 fight my-2">
+            <div
+              *ngFor="let fighter of fight.fighters; let i = index"
+              [ngClass]="{
+                'border-right': i % 2 === 0,
+                picked: checkIfPicked(
+                  fight.id,
+                  fighter.id,
+                  friendPick.userPicks
+                )
+              }"
+              class="col-sm-6 py-4 px-3 fighter"
+            >
+              <p class="fighter-name m-0">
+                {{ fighter.firstName }} {{ fighter.lastName }}
+              </p>
+              <p class="fighter-record m-0">
+                {{ fighter.preFightWins }} - {{ fighter.preFightLosses }} -
+                {{ fighter.preFightDraws }}
+              </p>
+              <p class="fighter-record m-0">
+                <span *ngIf="favourite(fight.fighters, i)"
+                  >Favourite: {{ fighter.moneyline }}</span
+                >
+                <span *ngIf="!favourite(fight.fighters, i)"
+                  >Underdog: {{ fighter.moneyline }}</span
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <button
+      (click)="toggleFriendPicks()"
+      *ngIf="userHasMadePicks && showFriendPicks"
+      type="button"
+      class="btn btn-info w-100 mt-2"
+    >
+      <span *ngIf="showFriendPicks">Hide Friend Picks</span>
+    </button>
 
     <button
       *ngIf="!userHasMadePicks"

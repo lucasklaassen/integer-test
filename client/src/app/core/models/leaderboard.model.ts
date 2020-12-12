@@ -1,7 +1,7 @@
 import { Base } from './base.model';
 
 export class Leaderboard extends Base {
-  id: number;
+  id: string;
   name: string;
   totalPoints: number;
 

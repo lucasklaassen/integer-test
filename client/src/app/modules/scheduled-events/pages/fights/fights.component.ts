@@ -1,13 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { forkJoin, Subject } from 'rxjs';
+import { map, takeUntil, tap } from 'rxjs/operators';
+import { AuthService } from 'src/app/core/authentication/services/auth/auth.service';
+import { LeaderboardService } from 'src/app/core/http/integer/leaderboard.service';
 import { ScheduledEventsService } from 'src/app/core/http/integer/scheduled-events.service';
 import { UserPicksService } from 'src/app/core/http/integer/user-picks.service';
 import { Fight } from 'src/app/core/models/fight.model';
 import { Fighter } from 'src/app/core/models/fighter.model';
+import { Leaderboard } from 'src/app/core/models/leaderboard.model';
 import { ScheduledEvent } from 'src/app/core/models/scheduled-event.model';
-
 @Component({
   selector: 'app-fights',
   templateUrl: './fights.component.html',
@@ -21,23 +23,28 @@ export class FightsComponent implements OnInit, OnDestroy {
   public userPicks: any = {};
   public submitText = 'Submit';
   public viewImages = false;
+  public showFriendPicks = false;
+  public friendPicks: any[] = [];
 
   private destroy$: Subject<any> = new Subject();
 
   constructor(
     private scheduledEventsService: ScheduledEventsService,
+    private leaderboardService: LeaderboardService,
+    private authService: AuthService,
     private userPicksService: UserPicksService,
     private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     const eventId: number = +this.activatedRoute.snapshot.paramMap.get('id');
+    const userId = this.authService.currentUser.userId;
     this.fetchFights(eventId);
+    this.fetchFriendPicks(eventId);
     this.userPicksService
-      .fetch(eventId)
+      .fetch(eventId, userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((results) => {
-        console.log(results);
         if (results.picks.length) {
           this.userHasMadePicks = true;
           results.picks.forEach((pick) => {
@@ -66,6 +73,44 @@ export class FightsComponent implements OnInit, OnDestroy {
       });
   }
 
+  public fetchFriendPicks(eventId: number): void {
+    const currentUserId = this.authService.currentUser.userId;
+    this.leaderboardService
+      .getAll()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((results) => {
+        const leaderboards: Leaderboard[] = results;
+        let userPickObservables = [];
+        leaderboards.forEach((leaderboard) => {
+          if (currentUserId !== leaderboard.id) {
+            userPickObservables.push(
+              this.userPicksService.fetch(eventId, leaderboard.id).pipe(
+                map((results) => {
+                  results.name = leaderboard.name;
+                  return results;
+                })
+              )
+            );
+          }
+        });
+        const friendPicks = forkJoin(userPickObservables);
+        friendPicks.subscribe((friendPickArray) => {
+          friendPickArray.forEach((friendPick: any) => {
+            let friendPickObj = {};
+            if (friendPick.picks.length) {
+              friendPick.picks.forEach((pick) => {
+                friendPickObj[+pick.fightId] = +pick.fighterId;
+              });
+              this.friendPicks.push({
+                name: friendPick.name,
+                userPicks: friendPickObj,
+              });
+            }
+          });
+        });
+      });
+  }
+
   public savePicks(): void {
     if (this.userHasMadePicks) {
       return;
@@ -88,6 +133,10 @@ export class FightsComponent implements OnInit, OnDestroy {
       });
   }
 
+  public toggleFriendPicks(): void {
+    this.showFriendPicks = !this.showFriendPicks;
+  }
+
   public pickFighter(fightId: number, fighterId: number): void {
     if (this.userHasMadePicks) {
       return;
@@ -95,8 +144,12 @@ export class FightsComponent implements OnInit, OnDestroy {
     this.userPicks[fightId] = fighterId;
   }
 
-  public checkIfPicked(fightId: number, fighterId: number): boolean {
-    return this.userPicks[fightId] === fighterId;
+  public checkIfPicked(
+    fightId: number,
+    fighterId: number,
+    userPicks: any
+  ): boolean {
+    return userPicks[fightId] === fighterId;
   }
 
   public favourite(fighters: Fighter[], index: number) {

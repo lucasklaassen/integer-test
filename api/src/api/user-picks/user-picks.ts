@@ -12,8 +12,8 @@ import { ApiEvent } from '../../interfaces/api.interface';
 import { UserPicksService } from './user-picks-service';
 
 const fetch = async (event: ApiEvent) => {
-  const userId = event.userId;
   const eventId = event.queryStringParameters.eventId;
+  const userId = event.queryStringParameters.userId;
   const userPicksService = new UserPicksService(userId, eventId);
   const picks = await userPicksService.fetch();
 
