@@ -13,12 +13,11 @@ export class FighterService {
       winner: apiObject.Winner,
       firstName: apiObject.FirstName,
       lastName: apiObject.LastName,
-      moneyline: apiObject.MoneyLine,
+      moneyline: apiObject.Moneyline,
       preFightDraws: apiObject.PreFightDraws,
       preFightLosses: apiObject.PreFightLosses,
       preFightNoContests: apiObject.PreFightNoContests,
-      preFightWins: apiObject.PreFightWins
+      preFightWins: apiObject.PreFightWins,
     };
   }
 }
-

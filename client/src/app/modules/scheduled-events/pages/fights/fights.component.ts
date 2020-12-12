@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ScheduledEventsService } from 'src/app/core/http/integer/scheduled-events.service';
 import { UserPicksService } from 'src/app/core/http/integer/user-picks.service';
 import { Fight } from 'src/app/core/models/fight.model';
+import { Fighter } from 'src/app/core/models/fighter.model';
 import { ScheduledEvent } from 'src/app/core/models/scheduled-event.model';
 
 @Component({
@@ -95,5 +96,15 @@ export class FightsComponent implements OnInit, OnDestroy {
 
   public checkIfPicked(fightId: number, fighterId: number): boolean {
     return this.userPicks[fightId] === fighterId;
+  }
+
+  public favourite(fighters: Fighter[], index: number) {
+    let currentFighter = fighters[0];
+    let otherFighter = fighters[1];
+    if (index === 1) {
+      currentFighter = fighters[1];
+      otherFighter = fighters[0];
+    }
+    return currentFighter.moneyline < otherFighter.moneyline;
   }
 }
