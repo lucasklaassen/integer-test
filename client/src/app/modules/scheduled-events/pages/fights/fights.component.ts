@@ -20,6 +20,7 @@ export class FightsComponent implements OnInit, OnDestroy {
   public userHasMadePicks: boolean = false;
   public userPicks: any = {};
   public submitText = 'Submit';
+  public viewImages = false;
 
   private destroy$: Subject<any> = new Subject();
 
@@ -106,5 +107,9 @@ export class FightsComponent implements OnInit, OnDestroy {
       otherFighter = fighters[0];
     }
     return currentFighter.moneyline < otherFighter.moneyline;
+  }
+
+  public toggleImages(): void {
+    this.viewImages = !this.viewImages;
   }
 }
