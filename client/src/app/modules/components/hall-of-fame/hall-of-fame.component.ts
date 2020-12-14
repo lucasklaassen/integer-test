@@ -14,6 +14,7 @@ import { Leaderboard } from 'src/app/core/models/leaderboard.model';
 })
 export class HallOfFameComponent implements OnInit, OnDestroy {
   public hallOfFames: HallOfFame[];
+  public showRules = false;
 
   private destroy$: Subject<any> = new Subject();
 
@@ -29,6 +30,10 @@ export class HallOfFameComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  public toggleRules(): void {
+    this.showRules = !this.showRules;
   }
 
   public fetchHallOfFameList(): void {

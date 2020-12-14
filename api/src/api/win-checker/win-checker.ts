@@ -54,12 +54,11 @@ const winChecker = async () => {
       if (+currentFight.winnerId === +currentPick.fighterId) {
         await leaderboardService.increase();
         let oddsDifference = -Infinity;
-        let underdogId;
+        const fighter1 = currentFight.fighters[0];
+        const fighter2 = currentFight.fighters[1];
+        const underdogId = fighter1.moneyline > fighter2.moneyline ? fighter1.id : fighter2.id;
         currentFight.fighters.forEach((fighter) => {
           const moneyline = +fighter.moneyline;
-          if (fighter.moneyline > oddsDifference) {
-            underdogId = fighter.id;
-          }
           if (oddsDifference === -Infinity) {
             oddsDifference = Math.abs(moneyline);
           } else {

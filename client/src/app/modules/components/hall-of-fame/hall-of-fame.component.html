@@ -16,6 +16,18 @@
   </header>
 
   <main role="main" class="inner cover">
+    <button
+      (click)="toggleRules()"
+      type="button"
+      class="btn btn-info w-100 mt-2 mb-4"
+    >
+      <span *ngIf="!showRules">Show Rules</span>
+      <span *ngIf="showRules">Hide Rules</span>
+    </button>
+    <p *ngIf="showRules" style="color: #fff">
+      After every PPV event, the Top Dawg from the leaderboard is awarded 1 Hall
+      of Fame point and the leaderboard resets.
+    </p>
     <div *ngIf="hallOfFames" class="card">
       <ul class="list-group list-group-flush">
         <li

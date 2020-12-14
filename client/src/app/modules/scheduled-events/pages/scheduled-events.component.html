@@ -21,6 +21,33 @@
   </header>
 
   <main role="main" class="inner cover">
+    <form
+      *ngIf="!userHasName"
+      [formGroup]="leaderboardForm"
+      [ngClass]="{
+        'needs-validation': !formSubmitted,
+        'was-validated': formSubmitted
+      }"
+    >
+      <p style="color: #fff">Looks like we don't have a name for you yet...</p>
+      <input
+        class="form-control w-50"
+        type="text"
+        placeholder="Full name"
+        aria-label="Enter your name"
+        formControlName="name"
+        required
+      />
+      <div
+        *ngIf="formSubmitted && leaderboardForm.get('name').invalid"
+        class="invalid-feedback"
+      >
+        You need to enter your full name.
+      </div>
+      <p class="lead mt-4">
+        <a (click)="submitForm()" class="btn btn-lg btn-secondary">Submit</a>
+      </p>
+    </form>
     <div class="card">
       <ul class="list-group list-group-flush">
         <li

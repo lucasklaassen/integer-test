@@ -109,7 +109,7 @@ functions:
     handler: src/api/fetcher/fetcher.fetchNewApiData
     timeout: 300
     events:
-      - schedule: rate(10 minutes)
+      - schedule: rate(30 minutes)
       - http:
           path: fetcher
           method: get
@@ -118,7 +118,7 @@ functions:
     handler: src/api/win-checker/win-checker.winChecker
     timeout: 300
     events:
-      - schedule: rate(5 minutes)
+      - schedule: rate(15 minutes)
       - http:
           path: win-checker
           method: get

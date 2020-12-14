@@ -19,7 +19,13 @@ const fetchNewApiData = async () => {
     const allEvents: ScheduledEvent[] = JSON.parse(response.body).map((apiEvent: any) =>
       ScheduledEventsService.mapKeys(apiEvent)
     );
-    const upcomingEvents: ScheduledEvent[] = allEvents;
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const upcomingEvents: ScheduledEvent[] = allEvents.filter(
+      (event: ScheduledEvent) => new Date(event.dateTime) >= yesterday
+    );
 
     for (let i = 0; i < upcomingEvents.length; i += 1) {
       const currentEvent: ScheduledEvent = upcomingEvents[i];

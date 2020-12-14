@@ -15,6 +15,7 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
   public userHasName = true;
   public leaderboardForm: FormGroup;
   public formSubmitted = false;
+  public showRules = false;
 
   private destroy$: Subject<any> = new Subject();
 
@@ -59,6 +60,10 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
     this.leaderboardForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.min(1)]],
     });
+  }
+
+  public toggleRules(): void {
+    this.showRules = !this.showRules;
   }
 
   public submitForm(): void {
