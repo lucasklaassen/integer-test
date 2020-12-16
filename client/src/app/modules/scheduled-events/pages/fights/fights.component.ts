@@ -20,6 +20,7 @@ export class FightsComponent implements OnInit, OnDestroy {
   public currentEvent: ScheduledEvent;
   public fights: Fight[];
   public userHasMadePicks: boolean = false;
+  public eventComplete: boolean = false;
   public userPicks: any = {};
   public submitText = 'Submit';
   public viewImages = false;
@@ -69,7 +70,11 @@ export class FightsComponent implements OnInit, OnDestroy {
         this.currentEvent = this.events.find(
           (currentEvent) => currentEvent.id === eventId
         );
+        console.log(this.currentEvent.fights);
         this.fights = this.currentEvent.fights;
+        if (new Date(this.currentEvent.dateTime) < new Date()) {
+          this.eventComplete = true;
+        }
       });
   }
 
@@ -112,7 +117,7 @@ export class FightsComponent implements OnInit, OnDestroy {
   }
 
   public savePicks(): void {
-    if (this.userHasMadePicks) {
+    if (this.userHasMadePicks || this.eventComplete) {
       return;
     }
     this.submitText = 'Submitting...';
@@ -133,12 +138,27 @@ export class FightsComponent implements OnInit, OnDestroy {
       });
   }
 
+  public resultText(fight: Fight): string {
+    if (fight.status === 'Final') {
+      if (fight.winnerId !== null) {
+        let winner = fight.fighters.find(
+          (fighter: Fighter) => +fighter.id === +fight.winnerId
+        );
+        return `Winner: ${winner.firstName} ${winner.lastName}`;
+      }
+      return 'Draw';
+    } else {
+      return 'Pending...';
+    }
+  }
+
   public toggleFriendPicks(): void {
     this.showFriendPicks = !this.showFriendPicks;
   }
 
   public pickFighter(fightId: number, fighterId: number): void {
-    if (this.userHasMadePicks) {
+    const fight = this.fights.find((fight: Fight) => +fight.id === +fightId);
+    if (this.userHasMadePicks || fight.status === 'Final') {
       return;
     }
     this.userPicks[fightId] = fighterId;

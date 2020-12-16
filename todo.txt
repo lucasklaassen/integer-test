@@ -1,0 +1,2 @@
+1. don't allow submitting picks for fight that's already completed
+2. Allow ability to change picks up until the fight starts

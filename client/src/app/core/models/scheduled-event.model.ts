@@ -17,4 +17,11 @@ export class ScheduledEvent extends Base {
     super();
     Object.assign(this, args);
   }
+
+  public daysFromToday(): number {
+    return Math.round(
+      (new Date(this.dateTime).getTime() - new Date().getTime()) /
+        (1000 * 3600 * 24)
+    );
+  }
 }

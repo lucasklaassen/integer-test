@@ -6,9 +6,17 @@ h3 {
   max-width: 42em;
 }
 
+.results {
+  font-size: 12px;
+  background: #fff;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
 .fight {
   background: #fff;
-  border-radius: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 .fighter {

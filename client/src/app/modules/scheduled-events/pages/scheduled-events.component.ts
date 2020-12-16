@@ -13,7 +13,9 @@ import { ScheduledEvent } from 'src/app/core/models/scheduled-event.model';
   styleUrls: ['./scheduled-events.component.scss'],
 })
 export class ScheduledEventsComponent implements OnInit, OnDestroy {
-  public events: ScheduledEvent[];
+  public upcomingEvents: ScheduledEvent[];
+  public pastEvents: ScheduledEvent[];
+  public todaysEvent: ScheduledEvent[];
   public userHasName = true;
   public leaderboardForm: FormGroup;
   public formSubmitted = false;
@@ -60,7 +62,30 @@ export class ScheduledEventsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((results) => {
         console.log(results);
-        this.events = results;
+        this.todaysEvent = results
+          .filter(
+            (event: ScheduledEvent) => new Date(event.dateTime) === new Date()
+          )
+          .sort(
+            (a: ScheduledEvent, b: ScheduledEvent) =>
+              new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+          );
+        this.upcomingEvents = results
+          .filter(
+            (event: ScheduledEvent) => new Date(event.dateTime) > new Date()
+          )
+          .sort(
+            (a: ScheduledEvent, b: ScheduledEvent) =>
+              new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+          );
+        this.pastEvents = results
+          .filter(
+            (event: ScheduledEvent) => new Date(event.dateTime) < new Date()
+          )
+          .sort(
+            (a: ScheduledEvent, b: ScheduledEvent) =>
+              new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()
+          );
       });
   }
 
