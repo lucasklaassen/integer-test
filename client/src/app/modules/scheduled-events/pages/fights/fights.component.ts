@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { plainToClass } from 'class-transformer';
 import { forkJoin, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { map, takeUntil, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/core/authentication/services/auth/auth.service';
 import { LeaderboardService } from 'src/app/core/http/integer/leaderboard.service';
 import { ScheduledEventsService } from 'src/app/core/http/integer/scheduled-events.service';
@@ -10,6 +11,7 @@ import { Fight } from 'src/app/core/models/fight.model';
 import { Fighter } from 'src/app/core/models/fighter.model';
 import { Leaderboard } from 'src/app/core/models/leaderboard.model';
 import { ScheduledEvent } from 'src/app/core/models/scheduled-event.model';
+import { UserPick } from 'src/app/core/models/user-pick.model';
 @Component({
   selector: 'app-fights',
   templateUrl: './fights.component.html',
@@ -21,7 +23,7 @@ export class FightsComponent implements OnInit, OnDestroy {
   public fights: Fight[];
   public userHasMadePicks: boolean = false;
   public eventComplete: boolean = false;
-  public userPicks: any = {};
+  public userPicks: UserPick[] = [];
   public submitText = 'Submit';
   public viewImages = false;
   public showFriendPicks = false;
@@ -46,12 +48,11 @@ export class FightsComponent implements OnInit, OnDestroy {
       .fetch(eventId, userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((results) => {
+        console.log(results);
         if (results.length) {
           this.userHasMadePicks = true;
           this.submitText = 'Update Picks';
-          results.forEach((pick) => {
-            this.userPicks[+pick.fightId] = +pick.fighterId;
-          });
+          this.userPicks = results;
           return;
         }
       });
@@ -91,9 +92,11 @@ export class FightsComponent implements OnInit, OnDestroy {
           if (currentUserId !== leaderboard.id) {
             userPickObservables.push(
               this.userPicksService.fetch(eventId, leaderboard.id).pipe(
-                map((results) => {
-                  results.name = leaderboard.name;
-                  return results;
+                map((results: UserPick[]) => {
+                  return {
+                    name: leaderboard.name,
+                    userPicks: results,
+                  };
                 })
               )
             );
@@ -101,18 +104,8 @@ export class FightsComponent implements OnInit, OnDestroy {
         });
         const friendPicks = forkJoin(userPickObservables);
         friendPicks.subscribe((friendPickArray) => {
-          friendPickArray.forEach((friendPick: any) => {
-            let friendPickObj = {};
-            if (friendPick.length) {
-              friendPick.forEach((pick) => {
-                friendPickObj[+pick.fightId] = +pick.fighterId;
-              });
-              this.friendPicks.push({
-                name: friendPick.name,
-                userPicks: friendPickObj,
-              });
-            }
-          });
+          console.log(friendPickArray);
+          this.friendPicks = friendPickArray;
         });
       });
   }
@@ -122,17 +115,11 @@ export class FightsComponent implements OnInit, OnDestroy {
       return;
     }
     this.submitText = 'Submitting...';
-    let picksForApi = [];
-    Object.keys(this.userPicks).forEach((key) => {
-      let pick = {};
-      pick['fightId'] = +key;
-      pick['fighterId'] = +this.userPicks[key];
-      picksForApi.push(pick);
-    });
+    let picksForApi = this.userPicks;
     this.userPicksService
       .savePicks(this.currentEvent.id, picksForApi)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((results) => {
+      .subscribe(() => {
         this.userHasMadePicks = true;
         this.submitText = 'Update Picks';
         window.scrollTo(0, 0);
@@ -156,6 +143,23 @@ export class FightsComponent implements OnInit, OnDestroy {
     }
   }
 
+  public userResultText(fight: Fight, userPicks: any): string {
+    const pick: UserPick = userPicks.find(
+      (pick: UserPick) => +pick.fightId === +fight.id
+    );
+
+    if (!pick || !pick.completed || !pick.correct) {
+      return;
+    }
+
+    if (pick.correct) {
+      if (pick.bigUnderdog) {
+        return '+2 Points Big Underdog Win';
+      }
+      return '+1 Point Win';
+    }
+  }
+
   public toggleFriendPicks(): void {
     this.showFriendPicks = !this.showFriendPicks;
   }
@@ -165,7 +169,14 @@ export class FightsComponent implements OnInit, OnDestroy {
     if (fight.status !== 'Scheduled') {
       return;
     }
-    this.userPicks[fightId] = fighterId;
+    const pick: UserPick = this.userPicks.find(
+      (pick: UserPick) => pick.fightId === fightId
+    );
+    if (!pick) {
+      this.userPicks.push(plainToClass(UserPick, { fightId, fighterId }));
+    } else {
+      pick.fighterId = fighterId;
+    }
   }
 
   public checkIfPicked(
@@ -173,7 +184,13 @@ export class FightsComponent implements OnInit, OnDestroy {
     fighterId: number,
     userPicks: any
   ): boolean {
-    return userPicks[fightId] === fighterId;
+    const pick: UserPick = userPicks.find(
+      (pick: UserPick) => pick.fightId === fightId
+    );
+    if (!pick) {
+      return false;
+    }
+    return pick.fighterId === fighterId;
   }
 
   public favourite(fighters: Fighter[], index: number) {

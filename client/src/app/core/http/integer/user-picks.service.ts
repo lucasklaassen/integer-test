@@ -32,7 +32,7 @@ export class UserPicksService {
       );
   }
 
-  public savePicks(eventId: number, picks: any): Observable<UserPick[]> {
+  public savePicks(eventId: number, picks: UserPick[]): Observable<UserPick[]> {
     return this.http
       .post<IApiResponse<UserPick[]>>(`${this.api}/user-picks`, {
         data: { eventId, picks },
