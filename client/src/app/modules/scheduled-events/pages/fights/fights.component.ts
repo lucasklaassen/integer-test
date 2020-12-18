@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, Subject } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { AuthService } from 'src/app/core/authentication/services/auth/auth.service';
 import { LeaderboardService } from 'src/app/core/http/integer/leaderboard.service';
 import { ScheduledEventsService } from 'src/app/core/http/integer/scheduled-events.service';
@@ -46,9 +46,10 @@ export class FightsComponent implements OnInit, OnDestroy {
       .fetch(eventId, userId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((results) => {
-        if (results.picks.length) {
+        if (results.length) {
           this.userHasMadePicks = true;
-          results.picks.forEach((pick) => {
+          this.submitText = 'Update Picks';
+          results.forEach((pick) => {
             this.userPicks[+pick.fightId] = +pick.fighterId;
           });
           return;
@@ -102,8 +103,8 @@ export class FightsComponent implements OnInit, OnDestroy {
         friendPicks.subscribe((friendPickArray) => {
           friendPickArray.forEach((friendPick: any) => {
             let friendPickObj = {};
-            if (friendPick.picks.length) {
-              friendPick.picks.forEach((pick) => {
+            if (friendPick.length) {
+              friendPick.forEach((pick) => {
                 friendPickObj[+pick.fightId] = +pick.fighterId;
               });
               this.friendPicks.push({
@@ -133,8 +134,8 @@ export class FightsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((results) => {
         this.userHasMadePicks = true;
+        this.submitText = 'Update Picks';
         window.scrollTo(0, 0);
-        this.submitText = 'Submit';
       });
   }
 

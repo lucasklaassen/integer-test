@@ -92,7 +92,7 @@
           {{ friendPick.name }} Picked
         </h3>
         <div *ngFor="let fight of fights; let i = index" class="row">
-          <div class="d-flex flex-row w-100 fight my-2">
+          <div class="d-flex flex-row w-100 fight friend-pick my-2">
             <div
               *ngFor="let fighter of fight.fighters; let i = index"
               [ngClass]="{
@@ -136,7 +136,7 @@
     </button>
 
     <button
-      *ngIf="!eventComplete"
+      *ngIf="!eventComplete && !showFriendPicks"
       (click)="savePicks()"
       type="button"
       class="btn btn-success w-100 mt-2"
