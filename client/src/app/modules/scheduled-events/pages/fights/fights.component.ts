@@ -72,7 +72,7 @@ export class FightsComponent implements OnInit, OnDestroy {
         );
         console.log(this.currentEvent.fights);
         this.fights = this.currentEvent.fights;
-        if (new Date(this.currentEvent.dateTime) < new Date()) {
+        if (this.currentEvent.status === 'Final') {
           this.eventComplete = true;
         }
       });
@@ -117,7 +117,7 @@ export class FightsComponent implements OnInit, OnDestroy {
   }
 
   public savePicks(): void {
-    if (this.userHasMadePicks || this.eventComplete) {
+    if (this.eventComplete) {
       return;
     }
     this.submitText = 'Submitting...';
@@ -148,6 +148,9 @@ export class FightsComponent implements OnInit, OnDestroy {
       }
       return 'Draw';
     } else {
+      if (fight.status === 'InProgress') {
+        return 'Live!';
+      }
       return 'Pending...';
     }
   }
@@ -158,7 +161,7 @@ export class FightsComponent implements OnInit, OnDestroy {
 
   public pickFighter(fightId: number, fighterId: number): void {
     const fight = this.fights.find((fight: Fight) => +fight.id === +fightId);
-    if (this.userHasMadePicks || fight.status === 'Final') {
+    if (fight.status !== 'Scheduled') {
       return;
     }
     this.userPicks[fightId] = fighterId;

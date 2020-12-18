@@ -23,7 +23,7 @@
       Click the fighters you think will win, then submit.
     </h6>
     <h6 *ngIf="userHasMadePicks" class="text-center text-success">
-      Your picks have been submitted. Good luck!
+      You can edit your picks up until the fight starts. Good luck!
     </h6>
     <button
       (click)="toggleImages()"
@@ -59,7 +59,7 @@
               'border-right': i % 2 === 0,
               picked: checkIfPicked(fight.id, fighter.id, userPicks)
             }"
-            class="col-sm-6 py-4 px-3 fighter"
+            class="col-sm-6 py-4 px-3 fighter clickable"
           >
             <p class="fighter-name m-0">
               {{ fighter.firstName }} {{ fighter.lastName }}
@@ -136,7 +136,7 @@
     </button>
 
     <button
-      *ngIf="!userHasMadePicks && !eventComplete"
+      *ngIf="!eventComplete"
       (click)="savePicks()"
       type="button"
       class="btn btn-success w-100 mt-2"
