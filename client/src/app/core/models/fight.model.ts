@@ -9,7 +9,13 @@ export class Fight extends Base {
   resultClock: number;
   resultRound: number;
   rounds: number;
-  status: string;
+  status:
+    | 'In Progress'
+    | 'Final'
+    | 'Scheduled'
+    | 'End of Round'
+    | 'Pre-fight'
+    | 'Walkouts';
   weightClass: string;
   winnerId: number;
 

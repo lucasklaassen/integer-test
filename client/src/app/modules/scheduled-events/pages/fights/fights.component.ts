@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { plainToClass } from 'class-transformer';
 import { forkJoin, Subject } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { AuthService } from 'src/app/core/authentication/services/auth/auth.service';
 import { LeaderboardService } from 'src/app/core/http/integer/leaderboard.service';
 import { ScheduledEventsService } from 'src/app/core/http/integer/scheduled-events.service';
@@ -136,8 +136,14 @@ export class FightsComponent implements OnInit, OnDestroy {
       }
       return 'Draw';
     } else {
-      if (fight.status === 'InProgress') {
+      if (fight.status === 'In Progress' || fight.status === 'End of Round') {
         return 'Live!';
+      }
+      if (fight.status === 'Pre-fight') {
+        return 'Up Next!';
+      }
+      if (fight.status === 'Walkouts') {
+        return 'Walking out...';
       }
       return 'Pending...';
     }

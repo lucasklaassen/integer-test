@@ -48,18 +48,6 @@
         <a (click)="submitForm()" class="btn btn-lg btn-secondary">Submit</a>
       </p>
     </form>
-    <h3 *ngIf="todaysEvent && todaysEvent.length">Today's Event:</h3>
-    <div *ngIf="todaysEvent && todaysEvent.length" class="card mb-4">
-      <ul class="list-group list-group-flush">
-        <li
-          *ngFor="let event of todaysEvent"
-          (click)="goToEvent(event.id)"
-          class="list-group-item clickable"
-        >
-          {{ event.name }}
-        </li>
-      </ul>
-    </div>
     <h3>Upcoming:</h3>
     <div class="card">
       <ul class="list-group list-group-flush">
@@ -69,11 +57,7 @@
           class="list-group-item clickable"
         >
           {{ event.name }}
-          <span class="badge badge-info"
-            >In
-            {{ event.daysFromToday() }}
-            day(s)</span
-          >
+          <span class="badge badge-info">{{ eventScheduleText(event) }}</span>
         </li>
       </ul>
     </div>

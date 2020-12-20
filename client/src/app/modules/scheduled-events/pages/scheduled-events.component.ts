@@ -15,7 +15,6 @@ import { ScheduledEvent } from 'src/app/core/models/scheduled-event.model';
 export class ScheduledEventsComponent implements OnInit, OnDestroy {
   public upcomingEvents: ScheduledEvent[];
   public pastEvents: ScheduledEvent[];
-  public todaysEvent: ScheduledEvent[];
   public userHasName = true;
   public leaderboardForm: FormGroup;
   public formSubmitted = false;
@@ -50,6 +49,7 @@ export class ScheduledEventsComponent implements OnInit, OnDestroy {
         }
       });
   }
+
   private buildForm(): void {
     this.leaderboardForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.min(1)]],
@@ -62,31 +62,32 @@ export class ScheduledEventsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((results) => {
         console.log(results);
-        this.todaysEvent = results
-          .filter(
-            (event: ScheduledEvent) => new Date(event.dateTime) === new Date()
-          )
-          .sort(
-            (a: ScheduledEvent, b: ScheduledEvent) =>
-              new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
-          );
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
         this.upcomingEvents = results
-          .filter(
-            (event: ScheduledEvent) => new Date(event.dateTime) > new Date()
-          )
+          .filter((event: ScheduledEvent) => new Date(event.day) >= today)
           .sort(
             (a: ScheduledEvent, b: ScheduledEvent) =>
               new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
           );
         this.pastEvents = results
-          .filter(
-            (event: ScheduledEvent) => new Date(event.dateTime) < new Date()
-          )
+          .filter((event: ScheduledEvent) => new Date(event.day) < today)
           .sort(
             (a: ScheduledEvent, b: ScheduledEvent) =>
               new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()
           );
       });
+  }
+
+  public eventScheduleText(event: ScheduledEvent): string {
+    const daysFromToday = event.daysFromToday();
+    if (daysFromToday > 0) {
+      return `In ${event.daysFromToday()} day(s)`;
+    }
+    if (event.status === 'In Progress') {
+      return 'Live!';
+    }
+    return 'Today';
   }
 
   public goToEvent(id: number) {
