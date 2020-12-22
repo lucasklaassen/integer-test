@@ -11,10 +11,12 @@ import { ScheduledEventsService } from '../scheduled-events/scheduled-events-ser
 import { Fight } from '../../interfaces/fight.interface';
 import { FightsService } from '../fights/fights-service';
 
+const yearToFetch = 2021;
+
 const fetchNewApiData = async () => {
   try {
     const response = await got(
-      `https://api.sportsdata.io/v3/mma/scores/json/Schedule/UFC/${new Date().getFullYear()}?key=${process.env.API_KEY}`
+      `https://api.sportsdata.io/v3/mma/scores/json/Schedule/UFC/${yearToFetch}?key=${process.env.API_KEY}`
     );
     const allEvents: ScheduledEvent[] = JSON.parse(response.body).map((apiEvent: any) =>
       ScheduledEventsService.mapKeys(apiEvent)
