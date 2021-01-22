@@ -134,7 +134,7 @@ export class FightsComponent implements OnInit, OnDestroy {
         );
         return `Winner: ${winner.firstName} ${winner.lastName}`;
       }
-      return 'Draw';
+      return '';
     } else {
       if (fight.status === 'In Progress' || fight.status === 'End of Round') {
         return 'Live!';
@@ -159,8 +159,14 @@ export class FightsComponent implements OnInit, OnDestroy {
     }
 
     if (pick.correct) {
+      const fighter1 = fight.fighters[0];
+      const fighter2 = fight.fighters[1];
       if (pick.bigUnderdog) {
-        return '+2 Points Big Underdog Win';
+        const underdogId =
+          fighter1.moneyline > fighter2.moneyline ? fighter1.id : fighter2.id;
+        if (+pick.fighterId === +underdogId) {
+          return '+2 Points Big Underdog Win';
+        }
       }
       return '+1 Point Win';
     }

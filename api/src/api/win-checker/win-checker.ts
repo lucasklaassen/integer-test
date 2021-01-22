@@ -5,6 +5,7 @@ const { jsonBodyParser, httpHeaderNormalizer, doNotWaitForEmptyEventLoop } = req
 import Dynamo from '../../common/dynamo';
 import { Fight } from '../../interfaces/fight.interface';
 import { ScheduledEvent } from '../../interfaces/scheduled-event.interface';
+import { hardcodedWins } from '../../lib/hardcoded-wins';
 import { httpJsonApiErrorHandler, cors } from '../../lib/middlewares';
 import { HallOfFameService } from '../hall-of-fame/hall-of-fame-service';
 import { LeaderboardService } from '../leaderboard/leaderboard-service';
@@ -40,15 +41,19 @@ const winChecker = async () => {
       if (currentPick.completed || !scheduledEvent) {
         continue;
       }
-      const currentFight: Fight | undefined = scheduledEvent.fights.find(
+      let currentFight: Fight | undefined = scheduledEvent.fights.find(
         (fight: Fight) => +fight.id === +currentPick.fightId
       );
       if (!currentFight) {
         continue;
       }
+
+      currentFight = hardcodedWins(currentFight);
+
       if (currentFight.winnerId === null) {
         continue;
       }
+
       currentPick.correct = false;
       currentPick.bigUnderdog = false;
       if (+currentFight.winnerId === +currentPick.fighterId) {
@@ -65,9 +70,11 @@ const winChecker = async () => {
             oddsDifference += Math.abs(moneyline);
           }
         });
-        if (oddsDifference >= 500 && +currentPick.fighterId === underdogId) {
-          await leaderboardService.increase();
+        if (oddsDifference >= 500) {
           currentPick.bigUnderdog = true;
+          if (+currentPick.fighterId === underdogId) {
+            await leaderboardService.increase();
+          }
         }
         currentPick.correct = true;
       }

@@ -69,9 +69,7 @@
             <span
               >{{ leaderboard.name }}: {{ leaderboard.totalPoints || 0 }}</span
             >
-            <span
-              *ngIf="i === 0 && +leaderboard.totalPoints > 0"
-              class="badge badge-success"
+            <span *ngIf="topDawg(leaderboards, i)" class="badge badge-success"
               >Top Dawg</span
             >
           </div>

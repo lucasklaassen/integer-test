@@ -10,6 +10,7 @@ import { ScheduledEvent } from '../../interfaces/scheduled-event.interface';
 import { ScheduledEventsService } from '../scheduled-events/scheduled-events-service';
 import { Fight } from '../../interfaces/fight.interface';
 import { FightsService } from '../fights/fights-service';
+import { hardcodedWins } from '../../lib/hardcoded-wins';
 
 const yearToFetch = 2021;
 
@@ -42,7 +43,22 @@ const fetchNewApiData = async () => {
           FightsService.mapKeys(apiFight)
         );
 
-        currentEvent.fights = allFights;
+        let newFights = [];
+
+        for (let j = 0; j < allFights.length; j += 1) {
+          const currentFight = allFights[j];
+          const currentFightResponse = await got(
+            `https://api.sportsdata.io/v3/mma/stats/json/Fight/${currentFight.id}?key=${process.env.API_KEY}`
+          );
+          const newFight: Fight = FightsService.mapKeys(JSON.parse(currentFightResponse.body));
+          newFights.push(newFight);
+        }
+
+        newFights.forEach((fight: Fight) => {
+          fight = hardcodedWins(fight);
+        });
+
+        currentEvent.fights = newFights;
 
         await Dynamo.write(currentEvent, tableName);
       } catch (error) {

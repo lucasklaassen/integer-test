@@ -56,6 +56,23 @@ export class LeaderboardComponent implements OnInit, OnDestroy {
       });
   }
 
+  public topDawg(leaderboards: Leaderboard[], index: number): boolean {
+    if (index === 0) {
+      const currentLeaderboard = leaderboards[index];
+      const nextLeaderboard = leaderboards[index + 1];
+
+      if (currentLeaderboard && +currentLeaderboard.totalPoints > 0) {
+        if (
+          !nextLeaderboard ||
+          +nextLeaderboard.totalPoints < +currentLeaderboard.totalPoints
+        ) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   private buildForm(): void {
     this.leaderboardForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.min(1)]],
