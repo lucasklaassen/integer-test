@@ -6,9 +6,9 @@ July 23rd, 2020
 
 ### Location of deployed application
 
-Front-end: https://integer-client.lucasklaassen.com/integers
+Front-end: REMOVED
 
-Back-end: https://integer-api.lucasklaassen.com/integers
+Back-end: REMOVED
 
 ### Time spent
 
