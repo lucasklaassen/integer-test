@@ -19,15 +19,23 @@ const winChecker = async () => {
   // If fight for pick has completed, mark pick as completed
   // If pick was correct, increment leaderpoint points
 
+  console.log('Running win checker');
+
   const userPicks = await UserPicksService.scan();
   const scheduledEvents: ScheduledEvent[] = await ScheduledEventsService.getAll();
 
+  console.log('User Picks', JSON.stringify(userPicks));
+
   for (let i = 0; i < userPicks.length; i += 1) {
     const currentPickObj = userPicks[i];
+    console.log('currentPickObj', JSON.stringify(currentPickObj));
     const userEventId = currentPickObj.id;
     const lastIndex = userEventId.lastIndexOf('-');
     const userId = userEventId.substring(0, lastIndex);
     const eventId = userEventId.substring(lastIndex + 1);
+
+    console.log('userId', userId);
+    console.log('eventId', eventId);
 
     const userPicksService = new UserPicksService(userId, eventId);
     const leaderboardService = new LeaderboardService(userId);
@@ -35,6 +43,8 @@ const winChecker = async () => {
     let scheduledEvent: ScheduledEvent | undefined = scheduledEvents.find(
       (event: ScheduledEvent) => +event.id === +eventId
     );
+
+    console.log('scheduledEvent', JSON.stringify(scheduledEvent));
 
     if (!scheduledEvent) {
       continue;
@@ -47,18 +57,21 @@ const winChecker = async () => {
       const winOverrides = await winOverridesService.fetch();
 
       winners = winOverrides.winners;
+      console.log('winners', JSON.stringify(winners));
     } catch (error) {
       console.log(error);
     }
 
     for (let j = 0; j < currentPickObj.picks.length; j += 1) {
       const currentPick = currentPickObj.picks[j];
+      console.log('currentUserPick', JSON.stringify(currentPick));
       if (currentPick.completed) {
         continue;
       }
       let currentFight: Fight | undefined = scheduledEvent.fights.find(
         (fight: Fight) => +fight.id === +currentPick.fightId
       );
+      console.log('currentFight', JSON.stringify(currentFight));
       if (!currentFight) {
         continue;
       }
@@ -71,12 +84,16 @@ const winChecker = async () => {
 
       currentPick.correct = false;
       currentPick.bigUnderdog = false;
+      console.log('Correct pick?', +currentFight.winnerId === +currentPick.fighterId);
       if (+currentFight.winnerId === +currentPick.fighterId) {
+        console.log('increasing leaderboard point');
         await leaderboardService.increase();
+        console.log('increasing leaderboard point complete');
         let oddsDifference = -Infinity;
         const fighter1 = currentFight.fighters[0];
         const fighter2 = currentFight.fighters[1];
         const underdogId = fighter1.moneyline > fighter2.moneyline ? fighter1.id : fighter2.id;
+        console.log('underdogId', underdogId);
         currentFight.fighters.forEach((fighter) => {
           const moneyline = +fighter.moneyline;
           if (oddsDifference === -Infinity) {
@@ -85,17 +102,25 @@ const winChecker = async () => {
             oddsDifference += Math.abs(moneyline);
           }
         });
+        console.log('oddsDifference', oddsDifference);
         if (oddsDifference >= 500) {
           currentPick.bigUnderdog = true;
+          console.log('Big underdog!');
           if (+currentPick.fighterId === underdogId) {
+            console.log('increasing leaderboard point for underdog');
             await leaderboardService.increase();
+            console.log('increasing leaderboard point for underdog complete');
           }
         }
+        console.log('Marking pick as correct!');
         currentPick.correct = true;
       }
+      console.log('Marking pick as complete!');
       currentPick.completed = true;
     }
-    userPicksService.savePicks(currentPickObj.picks);
+    console.log('save picks!');
+    await userPicksService.savePicks(currentPickObj.picks);
+    console.log('save picks complete');
   }
 
   for (let i = 0; i < scheduledEvents.length; i += 1) {
