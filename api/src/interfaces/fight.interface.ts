@@ -1,4 +1,4 @@
-import { Fighter } from "./fighter.interface";
+import { Fighter } from './fighter.interface';
 
 export interface Fight {
   id: number;
@@ -10,7 +10,7 @@ export interface Fight {
   rounds: number;
   status: string;
   weightClass: string;
-  winnerId: number;
+  winnerId: number | null;
 
   fighters: Fighter[];
 }

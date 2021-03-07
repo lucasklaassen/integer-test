@@ -88,6 +88,22 @@
     </ng-container>
 
     <ng-container *ngIf="showFriendPicks">
+      <h3 class="text-center mt-2" style="color: #fff">Overview</h3>
+      <div *ngFor="let fight of fights; let i = index" class="row flex-column">
+        <div class="d-flex flex-row w-100 fight friend-pick my-2">
+          <div
+            *ngFor="let fighter of fight.fighters; let i = index"
+            class="col-sm-6 py-4 px-3 fighter position-relative"
+          >
+            <p class="fighter-name m-0">
+              {{ fighter.firstName }} {{ fighter.lastName }}
+            </p>
+            <span _ngcontent-gql-c53="" class="badge badge-info"
+              >{{ findPercentage(fight)[i] }}%</span
+            >
+          </div>
+        </div>
+      </div>
       <ng-container *ngFor="let friendPick of friendPicks">
         <h3 class="text-center mt-2" style="color: #fff">
           {{ friendPick.name }} Picked
@@ -113,18 +129,6 @@
               >
               <p class="fighter-name m-0">
                 {{ fighter.firstName }} {{ fighter.lastName }}
-              </p>
-              <p class="fighter-record m-0">
-                {{ fighter.preFightWins }} - {{ fighter.preFightLosses }} -
-                {{ fighter.preFightDraws }}
-              </p>
-              <p class="fighter-record m-0">
-                <span *ngIf="favourite(fight.fighters, i)"
-                  >Favourite: {{ fighter.moneyline }}</span
-                >
-                <span *ngIf="!favourite(fight.fighters, i)"
-                  >Underdog: {{ fighter.moneyline }}</span
-                >
               </p>
             </div>
           </div>

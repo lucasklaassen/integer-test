@@ -10,8 +10,15 @@ AUTH0_NAMESPACE: ${self:custom.secrets.AUTH0_NAMESPACE}
 LOCAL_AWS_ACCESS_KEY_ID: ${self:custom.secrets.LOCAL_AWS_ACCESS_KEY_ID}
 LOCAL_AWS_SECRET_ACCESS_KEY: ${self:custom.secrets.LOCAL_AWS_SECRET_ACCESS_KEY}
 APP_URL: ${self:custom.secrets.APP_URL}
+STORM_GLASS_API_KEY: ${self:custom.secrets.STORM_GLASS_API_KEY}
+PUSH_SAFE_KEY: ${self:custom.secrets.PUSH_SAFE_KEY}
 tableName: ${self:custom.tableName.${opt:stage, self:provider.stage}}
 scheduledEventsTableName: ${self:custom.scheduledEventsTableName.${opt:stage, self:provider.stage}}
 userPicksTableName: ${self:custom.userPicksTableName.${opt:stage, self:provider.stage}}
 leaderboardTableName: ${self:custom.leaderboardTableName.${opt:stage, self:provider.stage}}
 hallOfFameTableName: ${self:custom.hallOfFameTableName.${opt:stage, self:provider.stage}}
+winOverrideTableName: ${self:custom.winOverrideTableName.${opt:stage, self:provider.stage}}
+blindsUsername: ${self:custom.secrets.BLINDS_USERNAME}
+blindsPassword: ${self:custom.secrets.BLINDS_PASSWORD}
+blindsApiKey: ${self:custom.secrets.BLINDS_API_KEY}
+blindsSerial: ${self:custom.secrets.BLINDS_SERIAL}

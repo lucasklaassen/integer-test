@@ -2,7 +2,6 @@
 
 const middy = require('middy');
 const { jsonBodyParser, httpHeaderNormalizer, doNotWaitForEmptyEventLoop } = require('middy/middlewares');
-import Dynamo from '../../common/dynamo';
 import { Fight } from '../../interfaces/fight.interface';
 import { ScheduledEvent } from '../../interfaces/scheduled-event.interface';
 import { hardcodedWins } from '../../lib/hardcoded-wins';
@@ -11,6 +10,7 @@ import { HallOfFameService } from '../hall-of-fame/hall-of-fame-service';
 import { LeaderboardService } from '../leaderboard/leaderboard-service';
 import { ScheduledEventsService } from '../scheduled-events/scheduled-events-service';
 import { UserPicksService } from '../user-picks/user-picks-service';
+import { WinOverridesService } from '../win-overrides/win-overrides-service';
 
 const winChecker = async () => {
   // Loop through all user picks
@@ -36,9 +36,24 @@ const winChecker = async () => {
       (event: ScheduledEvent) => +event.id === +eventId
     );
 
+    if (!scheduledEvent) {
+      continue;
+    }
+
+    let winners = [];
+
+    try {
+      const winOverridesService = new WinOverridesService(+scheduledEvent.id);
+      const winOverrides = await winOverridesService.fetch();
+
+      winners = winOverrides.winners;
+    } catch (error) {
+      console.log(error);
+    }
+
     for (let j = 0; j < currentPickObj.picks.length; j += 1) {
       const currentPick = currentPickObj.picks[j];
-      if (currentPick.completed || !scheduledEvent) {
+      if (currentPick.completed) {
         continue;
       }
       let currentFight: Fight | undefined = scheduledEvent.fights.find(
@@ -48,7 +63,7 @@ const winChecker = async () => {
         continue;
       }
 
-      currentFight = hardcodedWins(currentFight);
+      currentFight = await hardcodedWins(currentFight, winners);
 
       if (currentFight.winnerId === null) {
         continue;
@@ -116,8 +131,9 @@ const winChecker = async () => {
       }
 
       currentEvent.hallOfFameCounted = true;
-      const scheduledEventsTableName = String(process.env.scheduledEventsTableName);
-      await Dynamo.write(currentEvent, scheduledEventsTableName);
+
+      const scheduledEventsService = new ScheduledEventsService('', +currentEvent.id);
+      await scheduledEventsService.save(currentEvent);
 
       for (let j = 0; j < leaderboards.length; j += 1) {
         const leaderboard = leaderboards[j];

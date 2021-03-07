@@ -1,7 +1,5 @@
 'use strict';
 
-import Dynamo from '../../common/dynamo';
-const tableName = String(process.env.scheduledEventsTableName);
 const middy = require('middy');
 const got = require('got');
 const { jsonBodyParser, httpHeaderNormalizer, doNotWaitForEmptyEventLoop } = require('middy/middlewares');
@@ -11,6 +9,7 @@ import { ScheduledEventsService } from '../scheduled-events/scheduled-events-ser
 import { Fight } from '../../interfaces/fight.interface';
 import { FightsService } from '../fights/fights-service';
 import { hardcodedWins } from '../../lib/hardcoded-wins';
+import { WinOverridesService } from '../win-overrides/win-overrides-service';
 
 const yearToFetch = 2021;
 
@@ -33,6 +32,17 @@ const fetchNewApiData = async () => {
     for (let i = 0; i < upcomingEvents.length; i += 1) {
       const currentEvent: ScheduledEvent = upcomingEvents[i];
 
+      let winners = [];
+
+      try {
+        const winOverridesService = new WinOverridesService(+currentEvent.id);
+        const winOverrides = await winOverridesService.fetch();
+
+        winners = winOverrides.winners;
+      } catch (error) {
+        console.log(error);
+      }
+
       try {
         console.log(upcomingEvents, currentEvent.id);
         const response = await got(
@@ -54,13 +64,16 @@ const fetchNewApiData = async () => {
           newFights.push(newFight);
         }
 
-        newFights.forEach((fight: Fight) => {
-          fight = hardcodedWins(fight);
-        });
+        for (let k = 0; k < newFights.length; k += 1) {
+          let fight: Fight = newFights[k];
+          fight = await hardcodedWins(fight, winners);
+          newFights[k] = fight;
+        }
 
         currentEvent.fights = newFights;
 
-        await Dynamo.write(currentEvent, tableName);
+        const scheduledEventsService = new ScheduledEventsService('', +currentEvent.id);
+        await scheduledEventsService.save(currentEvent);
       } catch (error) {
         console.log(error);
       }

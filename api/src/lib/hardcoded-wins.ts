@@ -1,32 +1,15 @@
 import { Fight } from '../interfaces/fight.interface';
 
-export const hardcodedWins = (fight: Fight) => {
+export const hardcodedWins = async (fight: Fight, winners: any) => {
   const fightId = +fight.id;
+  fight.winnerId = null;
 
-  switch (fightId) {
-    case 1890:
-      fight.winnerId = 140000898;
-      break;
-    case 1916:
-      fight.winnerId = 140001097;
-      break;
-    case 1918:
-      fight.winnerId = 140000411;
-      break;
-    case 1919:
-      fight.winnerId = 140000417;
-      break;
-    case 1920:
-      fight.winnerId = 140000591;
-      break;
-    case 1921:
-      fight.winnerId = 140000652;
-      break;
-    case 1894:
-      fight.winnerId = 140000267;
-      break;
-    default:
-  }
+  winners.forEach((winner: any) => {
+    if (+winner.fightId === +fightId) {
+      fight.winnerId = +winner.winnerId;
+      fight.status = 'Final';
+    }
+  });
 
   return fight;
 };

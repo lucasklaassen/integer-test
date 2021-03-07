@@ -91,6 +91,17 @@ resources:
           - AttributeName: id
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+    WinOverrideTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.winOverrideTableName.${opt:stage, self:provider.stage}}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: N
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
 functions:
   auth0Authorizer:
     handler: src/api/handler.auth0Authorizer
@@ -139,6 +150,28 @@ functions:
     events:
       - http:
           path: user-picks
+          method: post
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+  fetchWinOverrides:
+    handler: src/api/win-overrides/win-overrides.fetch
+    events:
+      - http:
+          path: win-overrides
+          method: get
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+  saveWinners:
+    handler: src/api/win-overrides/win-overrides.saveWinners
+    events:
+      - http:
+          path: win-overrides
           method: post
           cors: true
           authorizer:
@@ -222,6 +255,15 @@ functions:
             name: auth0Authorizer
             resultTtlInSeconds: 0
             identitySource: method.request.header.Authorization
+  # blindsAutomation:
+  #   handler: src/api/blinds-automation/blinds-automation.blindsAutomation
+  #   timeout: 300
+  #   events:
+  #     # - schedule: cron(45 15 * * ? *)
+  #     - http:
+  #         path: blinds-automation
+  #         method: get
+  #         cors: true
 
 plugins:
   - serverless-plugin-typescript
@@ -254,6 +296,10 @@ custom:
     local: HallOfFame
     test: HallOfFame
     production: HallOfFameProd
+  winOverrideTableName:
+    local: WinOverride
+    test: WinOverride
+    production: WinOverrideProd
   defaultStage: local
   secrets: ${file(secrets.${opt:stage, self:provider.stage}.yml)}
   dynamodb:

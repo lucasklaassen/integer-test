@@ -1,0 +1,63 @@
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <header class="masthead">
+    <div class="inner">
+      <div class="d-flex justify-content-between align-items-center flex-row">
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link active" [routerLink]="['/admin']">Back</a>
+        </nav>
+        <h3 class="masthead-brand">Win Overrides</h3>
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link active" [routerLink]="['/logout']">Logout</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main *ngIf="currentEvent" role="main" class="inner cover">
+    <h3 class="text-center" style="color: #fff">
+      {{ currentEvent.name }}
+    </h3>
+    <div *ngFor="let fight of fights; let i = index" class="row">
+      <div class="d-flex flex-row w-100 fight mt-2">
+        <div
+          *ngFor="let fighter of fight.fighters; let i = index"
+          (click)="pickFighter(fight.id, fighter.id)"
+          [ngClass]="{
+            'border-right': i % 2 === 0,
+            picked: fighter.id === fight.winnerId
+          }"
+          class="col-sm-6 py-4 px-3 fighter clickable"
+        >
+          <p class="fighter-name m-0">
+            {{ fighter.firstName }} {{ fighter.lastName }}
+          </p>
+          <p class="fighter-record m-0">
+            {{ fighter.preFightWins }} - {{ fighter.preFightLosses }} -
+            {{ fighter.preFightDraws }}
+          </p>
+          <p class="fighter-record m-0">
+            <span *ngIf="favourite(fight.fighters, i)"
+              >Favourite: {{ fighter.moneyline }}</span
+            >
+            <span *ngIf="!favourite(fight.fighters, i)"
+              >Underdog: {{ fighter.moneyline }}</span
+            >
+          </p>
+        </div>
+      </div>
+      <div class="d-flex flex-row w-100 results">
+        <div class="col-sm-12 px-3 text-center d-flex flex-column">
+          <span class="m-0">{{ resultText(fight) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <button
+      (click)="saveWinners()"
+      type="button"
+      class="btn btn-success w-100 mt-2"
+    >
+      {{ submitText }}
+    </button>
+  </main>
+</div>

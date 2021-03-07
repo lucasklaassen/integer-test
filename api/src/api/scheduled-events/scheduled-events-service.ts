@@ -1,13 +1,14 @@
 'use strict';
 
 import Dynamo from '../../common/dynamo';
+import { ScheduledEvent } from '../../interfaces/scheduled-event.interface';
 const tableName = String(process.env.scheduledEventsTableName);
 
 export class ScheduledEventsService {
   userId: string;
-  eventId: string;
+  eventId: number;
 
-  constructor(userId: string, eventId: string) {
+  constructor(userId: string, eventId: number) {
     this.userId = userId;
     this.eventId = eventId;
   }
@@ -32,5 +33,9 @@ export class ScheduledEventsService {
 
   async fetch() {
     return Dynamo.get(+this.eventId, tableName);
+  }
+
+  async save(scheduledEvent: ScheduledEvent) {
+    return Dynamo.write(scheduledEvent, tableName);
   }
 }

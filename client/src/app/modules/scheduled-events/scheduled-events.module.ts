@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ScheduledEventsRoutingModule } from './scheduled-events-routing.module';
 import { ScheduledEventsComponent } from './pages/scheduled-events.component';
 import { FightsComponent } from './pages/fights/fights.component';
-import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   imports: [

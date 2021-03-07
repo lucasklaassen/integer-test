@@ -46,6 +46,11 @@ const routes: Routes = [
             (m) => m.ScheduledEventsModule
           ),
       },
+      {
+        path: 'admin',
+        loadChildren: () =>
+          import('./modules/admin/admin.module').then((m) => m.AdminModule),
+      },
     ],
   },
   {

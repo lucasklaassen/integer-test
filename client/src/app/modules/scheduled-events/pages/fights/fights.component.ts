@@ -28,6 +28,7 @@ export class FightsComponent implements OnInit, OnDestroy {
   public viewImages = false;
   public showFriendPicks = false;
   public friendPicks: any[] = [];
+  public percentagePicked: any = {};
 
   private destroy$: Subject<any> = new Subject();
 
@@ -53,6 +54,9 @@ export class FightsComponent implements OnInit, OnDestroy {
           this.userHasMadePicks = true;
           this.submitText = 'Update Picks';
           this.userPicks = results;
+          this.userPicks.forEach((pick: UserPick) => {
+            this.calculatePercentagePicked(pick);
+          });
           return;
         }
       });
@@ -93,6 +97,9 @@ export class FightsComponent implements OnInit, OnDestroy {
             userPickObservables.push(
               this.userPicksService.fetch(eventId, leaderboard.id).pipe(
                 map((results: UserPick[]) => {
+                  results.forEach((pick: UserPick) => {
+                    this.calculatePercentagePicked(pick);
+                  });
                   return {
                     name: leaderboard.name,
                     userPicks: results,
@@ -105,6 +112,7 @@ export class FightsComponent implements OnInit, OnDestroy {
         const friendPicks = forkJoin(userPickObservables);
         friendPicks.subscribe((friendPickArray) => {
           console.log(friendPickArray);
+          console.log(this.percentagePicked);
           this.friendPicks = friendPickArray;
         });
       });
@@ -134,7 +142,7 @@ export class FightsComponent implements OnInit, OnDestroy {
         );
         return `Winner: ${winner.firstName} ${winner.lastName}`;
       }
-      return '';
+      return 'Draw';
     } else {
       if (fight.status === 'In Progress' || fight.status === 'End of Round') {
         return 'Live!';
@@ -217,5 +225,29 @@ export class FightsComponent implements OnInit, OnDestroy {
 
   public toggleImages(): void {
     this.viewImages = !this.viewImages;
+  }
+
+  public findPercentage(fight: Fight): any {
+    const percentagePicked = this.percentagePicked[fight.id];
+    const fighter1Id = fight.fighters[0].id;
+    const fighter2Id = fight.fighters[1].id;
+    const fighter1PickCount = percentagePicked[fighter1Id] || 0;
+    const fighter2PickCount = percentagePicked[fighter2Id] || 0;
+    const totalCount = fighter1PickCount + fighter2PickCount;
+    const decimal1 = (fighter1PickCount / totalCount).toFixed(2);
+    const percentage1 = +decimal1 * 100;
+    const decimal2 = (fighter2PickCount / totalCount).toFixed(2);
+    const percentage2 = +decimal2 * 100;
+    return [percentage1, percentage2];
+  }
+
+  private calculatePercentagePicked(pick: UserPick): void {
+    if (!(pick.fightId in this.percentagePicked)) {
+      this.percentagePicked[pick.fightId] = {};
+    }
+    if (!(pick.fighterId in this.percentagePicked[pick.fightId])) {
+      this.percentagePicked[pick.fightId][pick.fighterId] = 0;
+    }
+    this.percentagePicked[pick.fightId][pick.fighterId] += 1;
   }
 }
