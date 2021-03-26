@@ -116,6 +116,17 @@ functions:
             name: auth0Authorizer
             resultTtlInSeconds: 0
             identitySource: method.request.header.Authorization
+  scheduleEventsFetch:
+    handler: src/api/scheduled-events/scheduled-events.fetch
+    events:
+      - http:
+          path: scheduled-event
+          method: get
+          cors: true
+          authorizer:
+            name: auth0Authorizer
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
   fetchNewApiData:
     handler: src/api/fetcher/fetcher.fetchNewApiData
     timeout: 300

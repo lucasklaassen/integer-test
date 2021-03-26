@@ -53,7 +53,7 @@ const fetchNewApiData = async () => {
           FightsService.mapKeys(apiFight)
         );
 
-        let newFights = [];
+        let newFights: any = [];
 
         for (let j = 0; j < allFights.length; j += 1) {
           const currentFight = allFights[j];

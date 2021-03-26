@@ -18,7 +18,6 @@ import { UserPick } from 'src/app/core/models/user-pick.model';
   styleUrls: ['./fights.component.scss'],
 })
 export class FightsComponent implements OnInit, OnDestroy {
-  public events: ScheduledEvent[];
   public currentEvent: ScheduledEvent;
   public fights: Fight[];
   public userHasMadePicks: boolean = false;
@@ -69,13 +68,10 @@ export class FightsComponent implements OnInit, OnDestroy {
 
   public fetchFights(eventId: number): void {
     this.scheduledEventsService
-      .getAll()
+      .fetch(eventId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((results) => {
-        this.events = results;
-        this.currentEvent = this.events.find(
-          (currentEvent) => currentEvent.id === eventId
-        );
+        this.currentEvent = results;
         console.log(this.currentEvent.fights);
         this.fights = this.currentEvent.fights;
         if (this.currentEvent.status === 'Final') {

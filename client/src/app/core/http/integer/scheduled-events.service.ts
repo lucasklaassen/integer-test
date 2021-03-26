@@ -26,4 +26,12 @@ export class ScheduledEventsService {
         )
       );
   }
+
+  public fetch(eventId: number): Observable<ScheduledEvent> {
+    return this.http
+      .get<IApiResponse<ScheduledEvent>>(
+        `${this.api}/scheduled-event?eventId=${eventId}`
+      )
+      .pipe(map((result) => plainToClass(ScheduledEvent, result.data)));
+  }
 }
