@@ -231,9 +231,9 @@ export class FightsComponent implements OnInit, OnDestroy {
     const fighter2PickCount = percentagePicked[fighter2Id] || 0;
     const totalCount = fighter1PickCount + fighter2PickCount;
     const decimal1 = (fighter1PickCount / totalCount).toFixed(2);
-    const percentage1 = +decimal1 * 100;
+    const percentage1 = (+decimal1 * 100).toFixed();
     const decimal2 = (fighter2PickCount / totalCount).toFixed(2);
-    const percentage2 = +decimal2 * 100;
+    const percentage2 = (+decimal2 * 100).toFixed();
     return [percentage1, percentage2];
   }
 
