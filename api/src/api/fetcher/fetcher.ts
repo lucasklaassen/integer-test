@@ -10,6 +10,8 @@ import { Fight } from '../../interfaces/fight.interface';
 import { FightsService } from '../fights/fights-service';
 import { hardcodedWins } from '../../lib/hardcoded-wins';
 import { WinOverridesService } from '../win-overrides/win-overrides-service';
+import { fighterOverrides } from './fighter-overrides';
+import { hardcodedFighters } from '../../lib/hardcoded-fighters';
 
 const yearToFetch = 2021;
 
@@ -61,11 +63,14 @@ const fetchNewApiData = async () => {
             `https://api.sportsdata.io/v3/mma/stats/json/Fight/${currentFight.id}?key=${process.env.API_KEY}`
           );
           const newFight: Fight = FightsService.mapKeys(JSON.parse(currentFightResponse.body));
-          newFights.push(newFight);
+          if (newFight.fighters.length && newFight.status !== 'Canceled') {
+            newFights.push(newFight);
+          }
         }
 
         for (let k = 0; k < newFights.length; k += 1) {
           let fight: Fight = newFights[k];
+          fight = await hardcodedFighters(fight, fighterOverrides);
           fight = await hardcodedWins(fight, winners);
           newFights[k] = fight;
         }
